@@ -363,6 +363,22 @@
         ANONYMOUS_ACCESS: 'ANONYMOUS_ACCESS',
     });
 
+    /**
+     * Workout statuses
+     * @enum {string}
+     * @name TaskStatus
+     * @memberof module:API.cvat.enums
+     * @property {string} NEW 'new'
+     * @property {string} PENDING 'pending'
+     * @property {string} COMPLETED 'completed'
+     * @readonly
+     */
+    const WorkoutStatus = Object.freeze({
+        NEW: 'new',
+        PENDING: 'pending',
+        COMPLETED: 'completed',
+    });
+
     module.exports = {
         ShareFileType,
         TaskStatus,
@@ -380,5 +396,6 @@
         DimensionType,
         CloudStorageProviderType,
         CloudStorageCredentialsType,
+        WorkoutStatus,
     };
 })();

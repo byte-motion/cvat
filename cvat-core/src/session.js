@@ -1634,7 +1634,7 @@
          * @throws {module:API.cvat.exceptions.ServerError}
          * @throws {module:API.cvat.exceptions.PluginError}
          */
-        async save(onUpdate = () => {}) {
+        async save(onUpdate = () => { }) {
             const result = await PluginRegistry.apiWrapper.call(this, Task.prototype.save, onUpdate);
             return result;
         }

@@ -18,6 +18,7 @@ import { UserAgreementsActionTypes } from 'actions/useragreements-actions';
 import { ReviewActionTypes } from 'actions/review-actions';
 import { ExportActionTypes } from 'actions/export-actions';
 import { CloudStorageActionTypes } from 'actions/cloud-storage-actions';
+import { WorkoutsActionTypes } from 'actions/workouts-actions';
 
 import getCore from 'cvat-core-wrapper';
 import { NotificationsState } from './interfaces';
@@ -120,6 +121,12 @@ const defaultState: NotificationsState = {
             updating: null,
             deleting: null,
         },
+        workouts: {
+            creating: null,
+            fetching: null,
+            updating: null,
+            deleting: null,
+        },
     },
     messages: {
         tasks: {
@@ -135,6 +142,9 @@ const defaultState: NotificationsState = {
             registerDone: '',
             requestPasswordResetDone: '',
             resetPasswordDone: '',
+        },
+        workouts: {
+            creatingDone: '',
         },
     },
 };
@@ -1303,6 +1313,47 @@ export default function (state = defaultState, action: AnyAction): Notifications
                 },
             };
         }
+
+        case WorkoutsActionTypes.CREATE_WORKOUT_FAILED: {
+            const instanceID = action.payload.instance.id;
+            const instanceType = action.payload.instance instanceof core.classes.Project ? 'project' : 'task';
+            const { name } = action.payload;
+
+            return {
+                ...state,
+                errors: {
+                    ...state.errors,
+                    workouts: {
+                        ...state.errors.workouts,
+                        creating: {
+                            message:
+                                `Could not create workout '${name}' for the ` +
+                                `<a href="/${instanceType}s/${instanceID}" target="_blank">` +
+                                `${instanceType} ${instanceID}</a>`,
+                            reason: action.payload.error.toString(),
+                        },
+                    },
+                },
+            };
+        }
+
+        case WorkoutsActionTypes.CREATE_WORKOUT_SUCCESS: {
+            const workoutID = action.payload.workout.id;
+            const { name } = action.payload;
+
+            return {
+                ...state,
+                messages: {
+                    ...state.messages,
+                    workouts: {
+                        ...state.messages.workouts,
+                        creatingDone: `Workout '${name}' has been created successfully ` +
+                            `<a href="/workouts/${workoutID}">Open workout</a>`,
+                    },
+                },
+            };
+        }
+
         case BoundariesActionTypes.RESET_AFTER_ERROR:
         case AuthActionTypes.LOGOUT_SUCCESS: {
             return { ...defaultState };

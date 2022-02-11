@@ -115,8 +115,50 @@ export interface ExportState {
     modalVisible: boolean;
 }
 
+export interface Workout {
+    instance: any;
+    dataset: any;
+    preview: string;
+}
+
+export interface WorkoutsState {
+    gettingQuery: WorkoutsQuery;
+    count: number;
+    current: Workout[];
+    fetching: boolean;
+    initialized: boolean;
+    activities: {
+        creates: {
+            id: number | null,
+            error: string
+        };
+    };
+    instance: any;
+    modalVisible: boolean;
+}
+
+export interface WorkoutsQuery {
+    page: number;
+    id: number | null;
+    search: string | null;
+    status: string | null;
+    [key: string]: string | number | null;
+}
+
 export interface FormatsState {
     annotationFormats: any;
+    fetching: boolean;
+    initialized: boolean;
+}
+
+export interface AIfredWorkspacesState {
+    workspaces: any;
+    fetching: boolean;
+    initialized: boolean;
+}
+
+export interface AIfredDTLsState {
+    dtls: any;
     fetching: boolean;
     initialized: boolean;
 }
@@ -399,6 +441,12 @@ export interface NotificationsState {
             updating: null | ErrorState;
             deleting: null | ErrorState;
         };
+        workouts: {
+            creating: null | ErrorState;
+            fetching: null | ErrorState;
+            updating: null | ErrorState;
+            deleting: null | ErrorState;
+        }
     };
     messages: {
         tasks: {
@@ -415,6 +463,9 @@ export interface NotificationsState {
             requestPasswordResetDone: string;
             resetPasswordDone: string;
         };
+        workouts: {
+            creatingDone: string;
+        }
     };
 }
 
@@ -698,6 +749,9 @@ export interface CombinedState {
     review: ReviewState;
     export: ExportState;
     cloudStorages: CloudStoragesState;
+    workouts: WorkoutsState;
+    aifredWorkspaces: AIfredWorkspacesState;
+    aifredDTLs: AIfredDTLsState;
 }
 
 export enum DimensionType {

@@ -13,7 +13,7 @@ interface Query {
 
 interface Props {
     query: Query;
-    instance: 'task' | 'project' | 'cloudstorage';
+    instance: 'task' | 'project' | 'cloudstorage' | 'workout';
     onSearch(query: object): void;
 }
 

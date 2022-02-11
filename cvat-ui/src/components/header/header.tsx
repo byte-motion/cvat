@@ -28,7 +28,7 @@ import Text from 'antd/lib/typography/Text';
 import getCore from 'cvat-core-wrapper';
 import consts from 'consts';
 
-import { CVATLogo, AccountIcon } from 'icons';
+import { AccountIcon, OcellusLogo } from 'icons';
 import ChangePasswordDialog from 'components/change-password-modal/change-password-modal';
 import { switchSettingsDialog as switchSettingsDialogAction } from 'actions/settings-actions';
 import { logoutAsync, authActions } from 'actions/auth-actions';
@@ -232,7 +232,7 @@ function HeaderContainer(props: Props): JSX.Element {
                 <SettingOutlined />
                 Settings
             </Menu.Item>
-            <Menu.Item key='about' onClick={showAboutModal}>
+            <Menu.Item key='about' onClick={() => showAboutModal()}>
                 <InfoCircleOutlined />
                 About
             </Menu.Item>
@@ -258,7 +258,7 @@ function HeaderContainer(props: Props): JSX.Element {
     return (
         <Layout.Header className='cvat-header'>
             <div className='cvat-left-header'>
-                <Icon className='cvat-logo-icon' component={CVATLogo} />
+                <Icon className='ocellus-logo-icon' component={OcellusLogo} />
                 <Button
                     className='cvat-header-button'
                     type='link'
@@ -282,6 +282,18 @@ function HeaderContainer(props: Props): JSX.Element {
                     }}
                 >
                     Tasks
+                </Button>
+                <Button
+                    className='cvat-header-button'
+                    type='link'
+                    value='workouts'
+                    href='/workouts?page=1'
+                    onClick={(event: React.MouseEvent): void => {
+                        event.preventDefault();
+                        history.push('/workouts?page=1');
+                    }}
+                >
+                    Workouts
                 </Button>
                 <Button
                     className='cvat-header-button'

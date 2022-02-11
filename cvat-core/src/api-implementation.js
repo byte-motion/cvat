@@ -5,6 +5,7 @@
 (() => {
     const PluginRegistry = require('./plugins');
     const serverProxy = require('./server-proxy');
+    const aifredProxy = require('./aifred-proxy');
     const lambdaManager = require('./lambda-manager');
     const {
         isBoolean,
@@ -22,6 +23,7 @@
         DimensionType,
         CloudStorageProviderType,
         CloudStorageCredentialsType,
+        WorkoutStatus,
     } = require('./enums');
 
     const User = require('./user');
@@ -86,6 +88,11 @@
 
         cvat.server.login.implementation = async (username, password) => {
             await serverProxy.server.login(username, password);
+        };
+
+        cvat.server.signing.implementation = async (url) => {
+            const result = await serverProxy.server.signing(url);
+            return result;
         };
 
         cvat.server.logout.implementation = async () => {
@@ -311,6 +318,102 @@
             cloudStorages.count = cloudStoragesData.count;
 
             return cloudStorages;
+        };
+
+        cvat.aifred.login.implementation = async (url) => {
+            await aifredProxy.login(url);
+        };
+
+        cvat.aifred.workspaces.implementation = async () => {
+            const result = await aifredProxy.workspaces();
+            return result;
+        };
+
+        cvat.aifred.dtls.implementation = async (workspaceId) => {
+            const result = await aifredProxy.dtls(workspaceId);
+            return result;
+        };
+
+        cvat.aifred.createWorkout
+            .implementation = async (name, instance, workspaceId, dtlId, iterations) => {
+                const result = await aifredProxy.createWorkout(name, instance, workspaceId, dtlId, iterations);
+                return result;
+            };
+
+        cvat.aifred.getSelf.implementation = async () => {
+            const result = await aifredProxy.getSelf();
+            return result;
+        };
+
+        cvat.aifred.authorized.implementation = async () => {
+            const result = await aifredProxy.authorized();
+            return result;
+        };
+
+        cvat.aifred.getWorkouts.implementation = async (filter) => {
+            checkFilter(filter, {
+                id: isInteger,
+                page: isInteger,
+                name: isString,
+                search: isString,
+                status: isEnum.bind(WorkoutStatus),
+            });
+
+            checkExclusiveFields(filter, ['id', 'search'], ['page']);
+
+            const searchParams = new URLSearchParams();
+            for (const field of ['name', 'owner', 'search', 'status', 'id', 'page']) {
+                if (Object.prototype.hasOwnProperty.call(filter, field)) {
+                    searchParams.set(camelToSnake(field), filter[field]);
+                }
+            }
+
+            // const projectsData = await serverProxy.projects.get(searchParams.toString());
+            // const projects = projectsData.map((project) => {
+            //     project.task_ids = project.tasks;
+            //     return project;
+            // }).map((project) => new Project(project));
+
+            // projects.count = projectsData.count;
+
+            const workoutsData = await aifredProxy.getWorkouts(searchParams.toString());
+            const workouts = workoutsData.map(async (workout) => {
+                const url = new URL(workout.data_url);
+                const [type, id] = url.pathname.split('/').slice(-2);
+
+                switch (type) {
+                    case 'tasks': {
+                        const tasks = await cvat.tasks.get.implementation({ id: Number(id) });
+                        const task = tasks.pop();
+                        workout.dataset = task;
+                        workout.preview = await workout.dataset.frames.preview();
+                        break;
+                    }
+                    case 'projects': {
+                        const projects = await cvat.projects.get.implementation({ id: Number(id) });
+                        workout.dataset = null;
+                        workout.preview = null;
+                        // workout.dataset = projects.pop();
+                        console.log('PROJECTS', projects);
+                        // const preview = await workout.dataset.preview();
+                        // console.log("PREVIEW", preview);
+                        // workout.preview = preview;
+                        // workout.preview = await workout.dataset.preview();
+                        break;
+                    }
+                    default:
+                        workout.dataset = null;
+                }
+
+                // TODO: CHANGE IT IN MODEL!
+                workout.owner = workout.cvat_user;
+                workout.name = workout.model_name;
+
+                return workout;
+            });
+
+            const result = await Promise.all(workouts);
+            return result;
         };
 
         return cvat;

@@ -11,7 +11,7 @@ import Modal from 'antd/lib/modal';
 import notification from 'antd/lib/notification';
 import Spin from 'antd/lib/spin';
 import Text from 'antd/lib/typography/Text';
-import 'antd/dist/antd.css';
+import 'antd/dist/antd.dark.css';
 
 import GlobalErrorBoundary from 'components/global-error-boundary/global-error-boundary';
 import Header from 'components/header/header';
@@ -24,6 +24,7 @@ import ProjectPageComponent from 'components/project-page/project-page';
 import TasksPageContainer from 'containers/tasks-page/tasks-page';
 import LoginWithTokenComponent from 'components/login-with-token/login-with-token';
 import ExportDatasetModal from 'components/export-dataset/export-dataset-modal';
+import CreateWorkoutModal from 'components/create-workout/create-workout-modal';
 import CreateTaskPageContainer from 'containers/create-task-page/create-task-page';
 import TaskPageContainer from 'containers/task-page/task-page';
 import ModelsPageContainer from 'containers/models-page/models-page';
@@ -42,6 +43,8 @@ import showPlatformNotification, {
     stopNotifications,
     showUnsupportedNotification,
 } from 'utils/platform-checker';
+import WorkoutPageComponent from './workout-page/workout-page';
+import WorkoutsPageComponent from './workouts-page/workouts-page';
 import '../styles.scss';
 import EmailConfirmationPage from './email-confirmation-page/email-confirmed';
 
@@ -57,6 +60,7 @@ interface CVATAppProps {
     switchShortcutsDialog: () => void;
     switchSettingsDialog: () => void;
     loadAuthActions: () => void;
+    loadAIfredWorkspaces: () => void;
     keyMap: KeyMap;
     userInitialized: boolean;
     userFetching: boolean;
@@ -75,6 +79,10 @@ interface CVATAppProps {
     notifications: NotificationsState;
     user: any;
     isModelPluginActive: boolean;
+    aifredWorkspacesInitialized: boolean;
+    aifredWorkspacesFetching: boolean;
+    // aifredDTLsInitialized: boolean;
+    // aifredDTLsFetching: boolean;
 }
 
 class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentProps> {
@@ -151,6 +159,7 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
             initPlugins,
             initModels,
             loadAuthActions,
+            loadAIfredWorkspaces,
             userInitialized,
             userFetching,
             formatsInitialized,
@@ -167,6 +176,10 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
             authActionsFetching,
             authActionsInitialized,
             isModelPluginActive,
+            aifredWorkspacesInitialized,
+            aifredWorkspacesFetching,
+            // aifredDTLsInitialized,
+            // aifredDTLsFetching,
         } = this.props;
 
         this.showErrors();
@@ -204,6 +217,10 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
 
         if (!pluginsInitialized && !pluginsFetching) {
             initPlugins();
+        }
+
+        if (!aifredWorkspacesInitialized && !aifredWorkspacesFetching) {
+            loadAIfredWorkspaces();
         }
     }
 
@@ -294,6 +311,8 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
             keyMap,
             location,
             isModelPluginActive,
+            aifredWorkspacesInitialized,
+            // aifredDTLsInitialized,
         } = this.props;
 
         const readyForRender =
@@ -302,6 +321,8 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
                 formatsInitialized &&
                 pluginsInitialized &&
                 aboutInitialized &&
+                aifredWorkspacesInitialized &&
+                // aifredDTLsInitialized &&
                 (!isModelPluginActive || modelsInitialized));
 
         const subKeyMap = {
@@ -339,6 +360,8 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
                                         <Route exact path='/tasks/create' component={CreateTaskPageContainer} />
                                         <Route exact path='/tasks/:id' component={TaskPageContainer} />
                                         <Route exact path='/tasks/:tid/jobs/:jid' component={AnnotationPageContainer} />
+                                        <Route exact path='/workouts' component={WorkoutsPageComponent} />
+                                        <Route exact path='/workouts/:id' component={WorkoutPageComponent} />
                                         <Route exact path='/cloudstorages' component={CloudStoragesPageComponent} />
                                         <Route
                                             exact
@@ -359,6 +382,8 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
                                         />
                                     </Switch>
                                 </GlobalHotKeys>
+                                {/* eslint-disable-next-line */}
+                                <CreateWorkoutModal />
                                 {/* eslint-disable-next-line */}
                                 <ExportDatasetModal />
                                 {/* eslint-disable-next-line */}

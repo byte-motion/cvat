@@ -15,6 +15,7 @@ import { getPluginsAsync } from 'actions/plugins-actions';
 import { switchSettingsDialog } from 'actions/settings-actions';
 import { shortcutsActions } from 'actions/shortcuts-actions';
 import { getUserAgreementsAsync } from 'actions/useragreements-actions';
+import { getAIfredWorkspacesAsync } from 'actions/aifred-workspaces-actions';
 import CVATApplication from 'components/cvat-app';
 import LayoutGrid from 'components/layout-grid/layout-grid';
 import logger, { LogType } from 'cvat-logger';
@@ -48,6 +49,8 @@ interface StateToProps {
     user: any;
     keyMap: KeyMap;
     isModelPluginActive: boolean;
+    aifredWorkspacesInitialized: boolean;
+    aifredWorkspacesFetching: boolean;
 }
 
 interface DispatchToProps {
@@ -62,6 +65,7 @@ interface DispatchToProps {
     loadUserAgreements: () => void;
     switchSettingsDialog: () => void;
     loadAuthActions: () => void;
+    loadAIfredWorkspaces: () => void;
 }
 
 function mapStateToProps(state: CombinedState): StateToProps {
@@ -72,6 +76,7 @@ function mapStateToProps(state: CombinedState): StateToProps {
     const { shortcuts } = state;
     const { userAgreements } = state;
     const { models } = state;
+    const { aifredWorkspaces } = state;
 
     return {
         userInitialized: auth.initialized,
@@ -94,6 +99,8 @@ function mapStateToProps(state: CombinedState): StateToProps {
         user: auth.user,
         keyMap: shortcuts.keyMap,
         isModelPluginActive: plugins.list.MODELS,
+        aifredWorkspacesInitialized: aifredWorkspaces.initialized,
+        aifredWorkspacesFetching: aifredWorkspaces.fetching,
     };
 }
 
@@ -110,6 +117,7 @@ function mapDispatchToProps(dispatch: any): DispatchToProps {
         switchShortcutsDialog: (): void => dispatch(shortcutsActions.switchShortcutsDialog()),
         switchSettingsDialog: (): void => dispatch(switchSettingsDialog()),
         loadAuthActions: (): void => dispatch(loadAuthActionsAsync()),
+        loadAIfredWorkspaces: (): void => dispatch(getAIfredWorkspacesAsync()),
     };
 }
 

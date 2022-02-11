@@ -19,6 +19,9 @@ import userAgreementsReducer from './useragreements-reducer';
 import reviewReducer from './review-reducer';
 import exportReducer from './export-reducer';
 import cloudStoragesReducer from './cloud-storages-reducer';
+import workoutsReducer from './workouts-reducer';
+import aifredWorkspaceReducer from './aifred-workspaces-reducer';
+import aifredDTLReducer from './aifred-dtls-reducer';
 
 export default function createRootReducer(): Reducer {
     return combineReducers({
@@ -38,5 +41,8 @@ export default function createRootReducer(): Reducer {
         review: reviewReducer,
         export: exportReducer,
         cloudStorages: cloudStoragesReducer,
+        workouts: workoutsReducer,
+        aifredWorkspaces: aifredWorkspaceReducer,
+        aifredDTLs: aifredDTLReducer,
     });
 }

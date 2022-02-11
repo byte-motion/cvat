@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: MIT
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import { connect } from 'react-redux';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { MenuInfo } from 'rc-menu/lib/interface';
@@ -18,6 +18,7 @@ import {
     switchMoveTaskModalVisible,
 } from 'actions/tasks-actions';
 import { exportActions } from 'actions/export-actions';
+import { workoutActions } from 'actions/workouts-actions';
 
 interface OwnProps {
     taskInstance: any;
@@ -28,6 +29,7 @@ interface StateToProps {
     loadActivity: string | null;
     inferenceIsActive: boolean;
     exportIsActive: boolean;
+    workspaces: any;
 }
 
 interface DispatchToProps {
@@ -37,6 +39,7 @@ interface DispatchToProps {
     openRunModelWindow: (taskInstance: any) => void;
     exportTask: (taskInstance: any) => void;
     openMoveTaskToProjectWindow: (taskInstance: any) => void;
+    showWorkoutModal: (taskInstance: any) => void;
 }
 
 function mapStateToProps(state: CombinedState, own: OwnProps): StateToProps {
@@ -49,6 +52,7 @@ function mapStateToProps(state: CombinedState, own: OwnProps): StateToProps {
         tasks: {
             activities: { loads, backups },
         },
+        aifredWorkspaces: { workspaces },
     } = state;
 
     return {
@@ -56,6 +60,7 @@ function mapStateToProps(state: CombinedState, own: OwnProps): StateToProps {
         annotationFormats,
         inferenceIsActive: tid in state.models.inferences,
         exportIsActive: tid in backups,
+        workspaces,
     };
 }
 
@@ -79,6 +84,9 @@ function mapDispatchToProps(dispatch: any): DispatchToProps {
         openMoveTaskToProjectWindow: (taskId: number): void => {
             dispatch(switchMoveTaskModalVisible(true, taskId));
         },
+        showWorkoutModal: (taskInstance: any): void => {
+            dispatch(workoutActions.openWorkoutModal(taskInstance));
+        },
     };
 }
 
@@ -95,31 +103,40 @@ function ActionsMenuContainer(props: OwnProps & StateToProps & DispatchToProps):
         openRunModelWindow,
         exportTask,
         openMoveTaskToProjectWindow,
+        showWorkoutModal,
     } = props;
 
-    function onClickMenu(params: MenuInfo): void {
-        const [action] = params.keyPath;
-        if (action === Actions.EXPORT_TASK_DATASET) {
-            showExportModal(taskInstance);
-        } else if (action === Actions.DELETE_TASK) {
-            deleteTask(taskInstance);
-        } else if (action === Actions.OPEN_BUG_TRACKER) {
-            window.open(`${taskInstance.bugTracker}`, '_blank');
-        } else if (action === Actions.RUN_AUTO_ANNOTATION) {
-            openRunModelWindow(taskInstance);
-        } else if (action === Actions.EXPORT_TASK) {
-            exportTask(taskInstance);
-        } else if (action === Actions.MOVE_TASK_TO_PROJECT) {
-            openMoveTaskToProjectWindow(taskInstance.id);
-        }
-    }
+    const onClickMenu = useCallback(
+        (params: MenuInfo) => {
+            const [action] = params.keyPath;
+            if (action === Actions.EXPORT_TASK_DATASET) {
+                showExportModal(taskInstance);
+            } else if (action === Actions.DELETE_TASK) {
+                deleteTask(taskInstance);
+            } else if (action === Actions.OPEN_BUG_TRACKER) {
+                window.open(`${taskInstance.bugTracker}`, '_blank');
+            } else if (action === Actions.RUN_AUTO_ANNOTATION) {
+                openRunModelWindow(taskInstance);
+            } else if (action === Actions.EXPORT_TASK) {
+                exportTask(taskInstance);
+            } else if (action === Actions.MOVE_TASK_TO_PROJECT) {
+                openMoveTaskToProjectWindow(taskInstance.id);
+            } else if (action === Actions.CREATE_WORKOUT) {
+                showWorkoutModal(taskInstance);
+            }
+        },
+        [taskInstance],
+    );
 
-    function onUploadAnnotations(format: string, file: File): void {
-        const [loader] = loaders.filter((_loader: any): boolean => _loader.name === format);
-        if (loader && file) {
-            loadAnnotations(taskInstance, loader, file);
-        }
-    }
+    const onUploadAnnotations = useCallback(
+        (format: string, file: File) => {
+            const [loader] = loaders.filter((_loader: any): boolean => _loader.name === format);
+            if (loader && file) {
+                loadAnnotations(taskInstance, loader, file);
+            }
+        },
+        [taskInstance],
+    );
 
     return (
         <ActionsMenuComponent
