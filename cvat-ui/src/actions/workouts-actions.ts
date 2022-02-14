@@ -73,7 +73,6 @@ export function getWorkoutsAsync(
 ): ThunkAction {
     return async (dispatch: ActionCreator<Dispatch>): Promise<void> => {
         dispatch(workoutActions.getWorkouts());
-        console.log('Qery', query);
         // Clear query object from null fields
         const filteredQuery: Partial<WorkoutsQuery> = {
             page: 1,
@@ -88,7 +87,6 @@ export function getWorkoutsAsync(
 
         let result = null;
         try {
-            console.log('FilteredQuery', filteredQuery);
             result = await cvat.aifred.getWorkouts(filteredQuery);
         } catch (error) {
             dispatch(workoutActions.getWorkoutsFailed(error));

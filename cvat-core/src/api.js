@@ -817,9 +817,11 @@ function build() {
              * Check if status contains this value
              * @property {integer} id Check if id equals this value
              * @property {integer} page Get specific page
-             * (default REST API returns 20 projects per request.
+             * (default REST API returns 10 workouts per request.
              * In order to get more, it is need to specify next page)
              * @property {string} search Combined search of contains among all fields
+             * @property {integer} task Get workout for given task ID.
+             * @property {integer} project Get workout for given project ID.
              * @global
              */
 

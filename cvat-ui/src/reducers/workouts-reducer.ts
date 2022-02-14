@@ -16,6 +16,8 @@ const defaultState: WorkoutsState = {
         id: null,
         search: null,
         status: null,
+        task: null,
+        project: null,
     },
     activities: {
         creates: {

@@ -33,7 +33,7 @@ export default function WorkoutListComponent(): JSX.Element {
         xxl: 16,
     };
 
-    console.log('WORKOUTS', workouts);
+    // console.log('WORKOUTS', workouts);
 
     return (
         <>

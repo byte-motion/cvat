@@ -25,13 +25,10 @@ export default function WorkoutsPageComponent(): JSX.Element {
 
     const anySearchQuery = !!Array.from(new URLSearchParams(search).keys()).filter((value) => value !== 'page').length;
 
-    console.log('Query', gettingQuery);
-    console.log('ANy', anySearchQuery);
-
     useEffect(() => {
         const searchParams: Partial<WorkoutsQuery> = {};
         for (const [param, value] of new URLSearchParams(search)) {
-            searchParams[param] = ['page', 'id'].includes(param) ? Number.parseInt(value, 10) : value;
+            searchParams[param] = ['page', 'id', 'task', 'project'].includes(param) ? Number.parseInt(value, 10) : value;
         }
         dispatch(getWorkoutsAsync(searchParams));
     }, []);
@@ -43,7 +40,6 @@ export default function WorkoutsPageComponent(): JSX.Element {
                 searchParams.append(name, value.toString());
             }
         }
-        console.log('search params', searchParams);
         history.push({
             pathname: '/workouts',
             search: `?${searchParams.toString()}`,

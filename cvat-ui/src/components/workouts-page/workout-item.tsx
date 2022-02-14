@@ -9,8 +9,12 @@ import Text from 'antd/lib/typography/Text';
 import Progress from 'antd/lib/progress';
 import Button from 'antd/lib/button';
 import { Row, Col } from 'antd/lib/grid';
+import { Dropdown } from 'antd';
+import Icon from '@ant-design/icons';
+import { MenuIcon } from 'icons';
 
 import { Workout } from 'reducers/interfaces';
+import WorkoutActionsMenuComponent from './actions-menu';
 
 interface Props {
     workoutInstance: Workout;
@@ -57,16 +61,16 @@ class WorkoutItemComponent extends React.PureComponent<Props & RouteComponentPro
                     </>
                 )}
                 <Text type='secondary'>
-                    Data set
+                    Used data set:
                     <Button
-                        href={`/tasks/${id}`}
+                        href={`/${type}/${id}`}
                         type='text'
                         onClick={(e: React.MouseEvent): void => {
                             e.preventDefault();
-                            history.push(`/tasks/${id}`);
+                            history.push(`/${type}/${id}`);
                         }}
                     >
-                        {`${type} #${id}`}
+                        {`${type.slice(0, -1)} #${id}`}
                     </Button>
                 </Text>
             </Col>
@@ -163,14 +167,14 @@ class WorkoutItemComponent extends React.PureComponent<Props & RouteComponentPro
                         </Button>
                     </Col>
                 </Row>
-                {/* <Row justify='end'>
+                <Row justify='end'>
                     <Col className='cvat-item-open-task-actions'>
                         <Text className='cvat-text-color'>Actions</Text>
-                        <Dropdown overlay={<ActionsMenuContainer taskInstance={taskInstance} />}>
+                        <Dropdown overlay={<WorkoutActionsMenuComponent workoutInstance={workoutInstance} />}>
                             <Icon className='cvat-menu-icon' component={MenuIcon} />
                         </Dropdown>
                     </Col>
-                </Row> */}
+                </Row>
             </Col>
         );
     }

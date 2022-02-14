@@ -142,6 +142,8 @@ export interface WorkoutsQuery {
     id: number | null;
     search: string | null;
     status: string | null;
+    task: number | null;
+    project: number | null;
     [key: string]: string | number | null;
 }
 

@@ -354,7 +354,8 @@
             checkFilter(filter, {
                 id: isInteger,
                 page: isInteger,
-                name: isString,
+                task: isInteger,
+                project: isInteger,
                 search: isString,
                 status: isEnum.bind(WorkoutStatus),
             });
@@ -362,19 +363,11 @@
             checkExclusiveFields(filter, ['id', 'search'], ['page']);
 
             const searchParams = new URLSearchParams();
-            for (const field of ['name', 'owner', 'search', 'status', 'id', 'page']) {
+            for (const field of ['search', 'status', 'id', 'page', 'task', 'project']) {
                 if (Object.prototype.hasOwnProperty.call(filter, field)) {
                     searchParams.set(camelToSnake(field), filter[field]);
                 }
             }
-
-            // const projectsData = await serverProxy.projects.get(searchParams.toString());
-            // const projects = projectsData.map((project) => {
-            //     project.task_ids = project.tasks;
-            //     return project;
-            // }).map((project) => new Project(project));
-
-            // projects.count = projectsData.count;
 
             const workoutsData = await aifredProxy.getWorkouts(searchParams.toString());
             const workouts = workoutsData.map(async (workout) => {
@@ -386,19 +379,14 @@
                         const tasks = await cvat.tasks.get.implementation({ id: Number(id) });
                         const task = tasks.pop();
                         workout.dataset = task;
-                        workout.preview = await workout.dataset.frames.preview();
+                        workout.preview = await task.frames.preview();
                         break;
                     }
                     case 'projects': {
                         const projects = await cvat.projects.get.implementation({ id: Number(id) });
-                        workout.dataset = null;
-                        workout.preview = null;
-                        // workout.dataset = projects.pop();
-                        console.log('PROJECTS', projects);
-                        // const preview = await workout.dataset.preview();
-                        // console.log("PREVIEW", preview);
-                        // workout.preview = preview;
-                        // workout.preview = await workout.dataset.preview();
+                        const project = projects.pop();
+                        workout.dataset = project;
+                        workout.preview = await project.preview();
                         break;
                     }
                     default:

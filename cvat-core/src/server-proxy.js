@@ -812,8 +812,6 @@
             async function getPreview(tid) {
                 const { backendAPI } = config;
 
-                console.log('TID', tid);
-
                 let response = null;
                 try {
                     response = await Axios.get(`${backendAPI}/tasks/${tid}/data?type=preview`, {

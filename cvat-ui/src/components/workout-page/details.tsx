@@ -47,7 +47,7 @@ export default function DetailsComponent(props: DetailsComponentProps): JSX.Elem
                 <Col>
                     <Text type='secondary'>
                         {`Workout #${workout.id} created`}
-                        {workout.owner ? ` by ${workout.owner.username}` : null}
+                        {workout.owner ? ` by ${workout.owner.name}` : null}
                         {` on ${moment(workout.createdDate).format('MMMM Do YYYY')}`}
                     </Text>
                 </Col>

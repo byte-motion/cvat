@@ -59,7 +59,7 @@ export default function SearchField(props: Props): JSX.Element {
                 const [field, fieldValue] = param.split(':');
                 if (fields.includes(field) && !!fieldValue) {
                     specificRequest = true;
-                    if (field === 'id') {
+                    if (['id', 'task', 'project'].includes(field)) {
                         if (Number.isInteger(+fieldValue)) {
                             currentQuery[field] = +fieldValue;
                         }

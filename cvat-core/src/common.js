@@ -36,6 +36,9 @@
                 if (!(prop in fields)) {
                     throw new ArgumentError(`Unsupported filter property has been received: "${prop}"`);
                 } else if (!fields[prop](filter[prop])) {
+                    console.log('FIELDS', fields);
+                    console.log('FILTER', filter);
+                    console.log('PROP', prop);
                     throw new ArgumentError(`Received filter property "${prop}" is not satisfied for checker`);
                 }
             }
@@ -76,7 +79,7 @@
                 if (value !== undefined) {
                     throw new ArgumentError(
                         `"${name}" is expected to be ${instance.name}, but ` +
-                            `"${value.constructor.name}" has been got`,
+                        `"${value.constructor.name}" has been got`,
                     );
                 }
 
