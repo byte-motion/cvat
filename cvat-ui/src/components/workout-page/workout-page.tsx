@@ -3,8 +3,8 @@
 // SPDX-License-Identifier: MIT
 
 import './styles.scss';
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 // import { useHistory, useParams, useLocation } from 'react-router';
 import Spin from 'antd/lib/spin';
@@ -24,6 +24,7 @@ import { CombinedState } from 'reducers/interfaces';
 // import ModelRunnerDialog from 'components/model-runner-modal/model-runner-dialog';
 // import ImportDatasetModal from 'components/import-dataset-modal/import-dataset-modal';
 // import { useDidUpdateEffect } from 'utils/hooks';
+import { getWorkoutsAsync } from 'actions/workouts-actions';
 import DetailsComponent from './details';
 import WorkoutTopBar from './top-bar';
 
@@ -33,9 +34,19 @@ interface ParamType {
 
 export default function WorkoutPageComponent(): JSX.Element {
     const id = +useParams<ParamType>().id;
+    const dispatch = useDispatch();
+
     // const history = useHistory();
     const workouts = useSelector((state: CombinedState) => state.workouts.current).map((workout) => workout.instance);
     const workoutsFetching = useSelector((state: CombinedState) => state.workouts.fetching);
+    const [workout] = workouts.filter((_workout) => _workout.id === id);
+
+    useEffect(() => {
+        dispatch(
+            getWorkoutsAsync({ id }),
+        );
+    }, [id, dispatch]);
+
     // const deletes = useSelector((state: CombinedState) => state.workouts.activities.deletes);
     // const taskDeletes = useSelector((state: CombinedState) => state.tasks.activities.deletes);
     // const tasksActiveInferences = useSelector((state: CombinedState) => state.models.inferences);
@@ -43,7 +54,6 @@ export default function WorkoutPageComponent(): JSX.Element {
     // const tasksCount = useSelector((state: CombinedState) => state.tasks.count);
     // const tasksGettingQuery = useSelector((state: CombinedState) => state.workouts.tasksGettingQuery);
 
-    const [workout] = workouts.filter((_workout) => _workout.id === id);
     // const workoutSubsets: Array<string> = [];
     // for (const task of tasks) {
     //     if (!workoutSubsets.includes(task.instance.subset)) workoutSubsets.push(task.instance.subset);
