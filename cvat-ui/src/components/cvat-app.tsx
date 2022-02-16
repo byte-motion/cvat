@@ -81,8 +81,6 @@ interface CVATAppProps {
     isModelPluginActive: boolean;
     aifredWorkspacesInitialized: boolean;
     aifredWorkspacesFetching: boolean;
-    // aifredDTLsInitialized: boolean;
-    // aifredDTLsFetching: boolean;
 }
 
 class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentProps> {
@@ -178,8 +176,6 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
             isModelPluginActive,
             aifredWorkspacesInitialized,
             aifredWorkspacesFetching,
-            // aifredDTLsInitialized,
-            // aifredDTLsFetching,
         } = this.props;
 
         this.showErrors();
@@ -312,7 +308,6 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
             location,
             isModelPluginActive,
             aifredWorkspacesInitialized,
-            // aifredDTLsInitialized,
         } = this.props;
 
         const readyForRender =
@@ -322,7 +317,6 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
                 pluginsInitialized &&
                 aboutInitialized &&
                 aifredWorkspacesInitialized &&
-                // aifredDTLsInitialized &&
                 (!isModelPluginActive || modelsInitialized));
 
         const subKeyMap = {
