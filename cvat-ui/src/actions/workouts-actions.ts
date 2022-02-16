@@ -4,7 +4,6 @@
 import { ActionUnion, createAction, ThunkAction } from 'utils/redux';
 import { ActionCreator, Dispatch } from 'redux';
 
-import { useHistory } from 'react-router';
 import { WorkoutsQuery } from 'reducers/interfaces';
 
 import getCore from 'cvat-core-wrapper';
@@ -60,9 +59,6 @@ export const createWorkoutAsync = (
         const workout = await cvat.aifred.createWorkout(name, instancePath, workspace, dtl, iterations);
 
         dispatch(workoutActions.createWorkoutSuccess(instance, name, workout));
-
-        const history = useHistory();
-        history.push(`/workouts/${workout.id}`);
     } catch (error) {
         dispatch(workoutActions.createWorkoutFailed(instance, name, error));
     }

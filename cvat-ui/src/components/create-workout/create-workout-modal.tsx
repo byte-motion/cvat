@@ -17,6 +17,7 @@ import { CombinedState } from 'reducers/interfaces';
 import { workoutActions, createWorkoutAsync } from 'actions/workouts-actions';
 import { getAIfredDTLsAsync } from 'actions/aifred-dtls-actions';
 import getCore from 'cvat-core-wrapper';
+import { useHistory } from 'react-router';
 
 const core = getCore();
 
@@ -36,11 +37,10 @@ function CreateWorkoutModal(): JSX.Element {
     const modalVisible = useSelector((state: CombinedState) => state.workouts.modalVisible);
     const workspaces = [...useSelector((state: CombinedState) => state.aifredWorkspaces.workspaces)]
         .sort((a: any, b: any) => a.name.localeCompare(b.name));
-    const { activities } = useSelector(
-        (state: CombinedState) => state.workouts,
-    );
+    const creates = useSelector((state: CombinedState) => state.workouts.activities.creates);
     const dtls = useSelector((state: CombinedState) => state.aifredDTLs.dtls);
     const [workspace] = useState(workspaces.length ? workspaces[0].id : undefined);
+    const history = useHistory();
 
     const fetchDTLs = (workspaceId: number) => {
         dispatch(getAIfredDTLsAsync(workspaceId));
@@ -58,7 +58,13 @@ function CreateWorkoutModal(): JSX.Element {
 
     useEffect(() => {
         initActivities();
-    }, [instance?.id, instance instanceof core.classes.Project, activities, workspace]);
+    }, [instance?.id, instance instanceof core.classes.Project, workspace]);
+
+    useEffect(() => {
+        if (creates.id && creates.error === '') {
+            history.push('/workouts');
+        }
+    }, [creates]);
 
     const closeModal = (): void => {
         form.resetFields();
