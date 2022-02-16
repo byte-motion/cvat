@@ -67,7 +67,7 @@ class WorkoutItemComponent extends React.PureComponent<Props & RouteComponentPro
                         type='text'
                         onClick={(e: React.MouseEvent): void => {
                             e.preventDefault();
-                            history.push(`/${type}/${id}`);
+                            history.push(`/${type}/${id}`, { from: 'workouts' });
                         }}
                     >
                         {`${type.slice(0, -1)} #${id}`}
