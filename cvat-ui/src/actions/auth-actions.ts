@@ -107,7 +107,7 @@ export const loginAsync = (username: string, password: string): ThunkAction => a
         await cvat.server.login(username, password);
         const users = await cvat.users.get({ self: true });
         const url = await cvat.server.signing('/users/self');
-        cvat.aifred.login(url);
+        await cvat.aifred.login(url);
 
         dispatch(authActions.loginSuccess(users[0]));
     } catch (error) {
