@@ -25,6 +25,16 @@ export default function DetailsComponent(props: DetailsComponentProps): JSX.Elem
     // const dispatch = useDispatch();
     const [workoutName, setWorkoutName] = useState(workout.name);
 
+    const preview = (
+        <div className='cvat-workout-preview-wrapper'>
+            {workout.preview && (
+                <img alt='Preview' className='cvat-task-item-preview' src={workout.preview} />
+            )}
+        </div>
+    );
+
+    console.log('WERKOUT', workout);
+
     return (
         <div cvat-workout-id={workout.id} className='cvat-workout-details'>
             <Row>
@@ -44,12 +54,42 @@ export default function DetailsComponent(props: DetailsComponentProps): JSX.Elem
                 </Col>
             </Row>
             <Row justify='space-between' className='cvat-workout-description'>
-                <Col>
-                    <Text type='secondary'>
-                        {`Workout #${workout.id} created`}
-                        {workout.owner ? ` by ${workout.owner.name}` : null}
-                        {` on ${moment(workout.createdDate).format('MMMM Do YYYY')}`}
-                    </Text>
+                <Col md={8} lg={7} xl={7} xxl={6}>
+                    <Row justify='start' align='middle'>
+                        <Col span={24}>{preview}</Col>
+                    </Row>
+                </Col>
+                <Col md={16} lg={17} xl={17} xxl={18}>
+                    <Row>
+                        <Col span={24}>
+                            <Text type='secondary'>
+                                {`Workout #${workout.id} created`}
+                                {workout.owner ? ` by ${workout.owner.name}` : null}
+                                {` on ${moment(workout.createdDate).format('MMMM Do YYYY')}`}
+                            </Text>
+                        </Col>
+                        <Col span={24}>
+                            <Text>
+                                Augmentation schema:
+                                {' '}
+                                {`${workout.dtl.name} (${workout.dtl.description})`}
+                            </Text>
+                        </Col>
+                        <Col span={24}>
+                            <Text>
+                                Iteration steps:
+                                {' '}
+                                {workout.iterations}
+                            </Text>
+                        </Col>
+                        <Col span={24}>
+                            <Text>
+                                Status:
+                                {' '}
+                                {workout.status}
+                            </Text>
+                        </Col>
+                    </Row>
                 </Col>
             </Row>
         </div>
