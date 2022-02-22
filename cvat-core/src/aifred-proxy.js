@@ -56,7 +56,7 @@
 
                 let response = null;
                 try {
-                    response = await Axios.get(`${aifredAPI}/models`, {
+                    response = await Axios.get(`${aifredAPI}/workspaces`, {
                         proxy,
                     });
                 } catch (errorData) {
@@ -71,7 +71,7 @@
 
                 let response = null;
                 try {
-                    response = await Axios.get(`${aifredAPI}/models/${workspaceId}/dtls`, {
+                    response = await Axios.get(`${aifredAPI}/workspaces/${workspaceId}/dtls`, {
                         proxy,
                     });
                 } catch (errorData) {
@@ -93,7 +93,7 @@
                     const data = JSON.stringify({
                         name,
                         iterations,
-                        model_group_id: workspaceId,
+                        workspace_id: workspaceId,
                         dtl_id: dtlId,
                         data_url: dataSetPath,
                     });

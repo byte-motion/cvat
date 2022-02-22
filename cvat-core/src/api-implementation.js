@@ -393,9 +393,7 @@
                         workout.dataset = null;
                 }
 
-                // TODO: CHANGE IT IN MODEL!
                 workout.owner = workout.cvat_user;
-                workout.name = workout.model_name;
 
                 return workout;
             });
