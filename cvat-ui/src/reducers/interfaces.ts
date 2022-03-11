@@ -121,6 +121,32 @@ export interface Workout {
     preview: string;
 }
 
+export interface WorkoutValidation {
+    name: string;
+    image: string;
+}
+
+export interface WorkoutState {
+    fetching: boolean;
+    current: Workout | null;
+    instance: any;
+    modalVisible: boolean;
+    activities: {
+        creates: {
+            id: number | null,
+            error: string
+        },
+        validations: {
+            images: WorkoutValidation[];
+            fetching: boolean;
+        }
+        metrics: {
+            image: string | null;
+            fetching: boolean;
+        }
+    };
+}
+
 export interface WorkoutsState {
     gettingQuery: WorkoutsQuery;
     count: number;
@@ -734,6 +760,17 @@ export interface ReviewState {
     };
 }
 
+export enum WorkoutStatus {
+    FINISHED = 'finished',
+    STOPPED = 'stopped',
+    NEW = 'new',
+    ERROR = 'error',
+    QUEUED = 'queued',
+    TRAINING = 'training',
+    FETCHING = 'fetching',
+    AUGMENTING = 'augmenting',
+}
+
 export interface CombinedState {
     auth: AuthState;
     projects: ProjectsState;
@@ -752,6 +789,7 @@ export interface CombinedState {
     export: ExportState;
     cloudStorages: CloudStoragesState;
     workouts: WorkoutsState;
+    workout: WorkoutState;
     aifredWorkspaces: AIfredWorkspacesState;
     aifredDTLs: AIfredDTLsState;
 }

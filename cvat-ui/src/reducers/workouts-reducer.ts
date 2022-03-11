@@ -88,11 +88,6 @@ export default (state: WorkoutsState = defaultState, action: WorkoutActions): Wo
                 current: [],
             };
         case WorkoutsActionTypes.GET_WORKOUTS_SUCCESS: {
-            // const combinedWithPreviews = action.payload.array.map(
-            //     (workout: any): Workout => ({
-            //         instance: workout
-            //     }),
-            // );
             const workouts = action.payload.array.map(
                 (workout: any): Workout => ({
                     instance: workout,

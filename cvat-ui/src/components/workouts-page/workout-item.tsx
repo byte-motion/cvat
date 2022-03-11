@@ -13,14 +13,23 @@ import { Dropdown } from 'antd';
 import Icon from '@ant-design/icons';
 import { MenuIcon } from 'icons';
 
-import { Workout } from 'reducers/interfaces';
+import { Workout, WorkoutStatus } from 'reducers/interfaces';
 import WorkoutActionsMenuComponent from './actions-menu';
+import ProgressBarComponent from '../workout-page/progress-bar';
 
 interface Props {
     workoutInstance: Workout;
 }
 
 class WorkoutItemComponent extends React.PureComponent<Props & RouteComponentProps> {
+    private formatSeconds(seconds: number): string {
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor(seconds / 60) % 60;
+        const secs = seconds % 60;
+
+        return `${hours}h ${minutes}m ${secs}s`;
+    }
+
     private renderPreview(): JSX.Element {
         const { workoutInstance } = this.props;
         const { preview } = workoutInstance.instance;
@@ -79,35 +88,28 @@ class WorkoutItemComponent extends React.PureComponent<Props & RouteComponentPro
 
     private renderProgress(): JSX.Element {
         const { workoutInstance } = this.props;
-        // Count number of jobs and performed jobs
         const numOfIterations = workoutInstance.instance.iterations;
-        const numOfCompleted = (workoutInstance.instance.status === 'completed') ? numOfIterations : 0;
+        const numOfCompleted = (workoutInstance.instance.iteration === 0) ?
+            0 : workoutInstance.instance.iteration + 1; // need to add 1
+        const timeLeft = (workoutInstance.instance.eta < 0) ? 'N/A' : this.formatSeconds(workoutInstance.instance.eta);
+        const { status } = workoutInstance.instance;
 
-        // Progress appearance depends on number of jobs
         let progressColor = null;
-        let progressText = null;
-        if (numOfCompleted && numOfCompleted === numOfIterations) {
-            progressColor = 'cvat-task-completed-progress';
-            progressText = (
-                <Text strong className={progressColor}>
-                    Completed
-                </Text>
-            );
-        } else if (numOfCompleted) {
-            progressColor = 'cvat-task-progress-progress';
-            progressText = (
-                <Text strong className={progressColor}>
-                    In Progress
-                </Text>
-            );
+        if (status === WorkoutStatus.FINISHED) {
+            progressColor = 'cvat-workout-completed-progress';
+        } else if (status === WorkoutStatus.ERROR) {
+            progressColor = 'cvat-workout-error-progress';
+        } else if ([WorkoutStatus.STOPPED, WorkoutStatus.QUEUED, WorkoutStatus.NEW].includes(status)) {
+            progressColor = 'cvat-workout-pending-progress';
         } else {
-            progressColor = 'cvat-task-pending-progress';
-            progressText = (
-                <Text strong className={progressColor}>
-                    Pending
-                </Text>
-            );
+            progressColor = 'cvat-workout-progress-progress';
         }
+
+        const progressText = (
+            <Text strong className={progressColor}>
+                {status}
+            </Text>
+        );
 
         const workoutProgress = numOfCompleted / numOfIterations;
 
@@ -127,7 +129,7 @@ class WorkoutItemComponent extends React.PureComponent<Props & RouteComponentPro
                 <Row>
                     <Col span={24}>
                         <Progress
-                            className={`${progressColor} cvat-task-progress`}
+                            className={`${progressColor} cvat-workout-progress`}
                             percent={workoutProgress * 100}
                             strokeColor='#1890FF'
                             showInfo={false}
@@ -136,10 +138,11 @@ class WorkoutItemComponent extends React.PureComponent<Props & RouteComponentPro
                         />
                     </Col>
                 </Row>
-                {/* <AutomaticAnnotationProgress
-                    activeInference={activeInference}
-                    cancelAutoAnnotation={cancelAutoAnnotation}
-                /> */}
+                <Row justify='space-between' align='top'>
+                    <Col span={24}>
+                        <Text type='secondary'>{`ETA: ${timeLeft}`}</Text>
+                    </Col>
+                </Row>
             </Col>
         );
     }
@@ -180,6 +183,8 @@ class WorkoutItemComponent extends React.PureComponent<Props & RouteComponentPro
     }
 
     public render(): JSX.Element {
+        const { workoutInstance } = this.props;
+        const { instance } = workoutInstance;
         // const { deleted, hidden } = this.props;
         const style = {};
         // if (deleted) {
@@ -195,7 +200,7 @@ class WorkoutItemComponent extends React.PureComponent<Props & RouteComponentPro
             <Row className='cvat-tasks-list-item' justify='center' align='top' style={{ ...style }}>
                 {this.renderPreview()}
                 {this.renderDescription()}
-                {this.renderProgress()}
+                <ProgressBarComponent workout={instance} span={6} />
                 {this.renderNavigation()}
             </Row>
         );

@@ -350,6 +350,37 @@
             return result;
         };
 
+        const getWorkoutPreview = async (workout) => {
+            const url = new URL(workout.data_url);
+            const [type, id] = url.pathname.split('/').slice(-2);
+
+            const result = {
+                dataset: null,
+                preview: null,
+            };
+
+            switch (type) {
+                case 'tasks': {
+                    const tasks = await cvat.tasks.get.implementation({ id: Number(id) });
+                    const task = tasks.pop();
+                    result.dataset = task;
+                    result.preview = await task.frames.preview();
+                    break;
+                }
+                case 'projects': {
+                    const projects = await cvat.projects.get.implementation({ id: Number(id) });
+                    const project = projects.pop();
+                    result.dataset = project;
+                    result.preview = await project.preview();
+                    break;
+                }
+                default:
+                    break;
+            }
+
+            return result;
+        };
+
         cvat.aifred.getWorkouts.implementation = async (filter) => {
             checkFilter(filter, {
                 id: isInteger,
@@ -371,28 +402,10 @@
 
             const workoutsData = await aifredProxy.getWorkouts(searchParams.toString());
             const workouts = workoutsData.map(async (workout) => {
-                const url = new URL(workout.data_url);
-                const [type, id] = url.pathname.split('/').slice(-2);
+                const { dataset, preview } = await getWorkoutPreview(workout);
 
-                switch (type) {
-                    case 'tasks': {
-                        const tasks = await cvat.tasks.get.implementation({ id: Number(id) });
-                        const task = tasks.pop();
-                        workout.dataset = task;
-                        workout.preview = await task.frames.preview();
-                        break;
-                    }
-                    case 'projects': {
-                        const projects = await cvat.projects.get.implementation({ id: Number(id) });
-                        const project = projects.pop();
-                        workout.dataset = project;
-                        workout.preview = await project.preview();
-                        break;
-                    }
-                    default:
-                        workout.dataset = null;
-                }
-
+                workout.dataset = dataset;
+                workout.preview = preview;
                 workout.owner = workout.cvat_user;
 
                 return workout;
@@ -400,6 +413,26 @@
 
             const result = await Promise.all(workouts);
             return result;
+        };
+
+        cvat.aifred.getWorkout.implementation = async (workoutId) => {
+            const workout = await aifredProxy.getWorkout(workoutId);
+            const preview = await getWorkoutPreview(workout);
+            return {
+                ...workout,
+                ...preview,
+                owner: workout.cvat_user,
+            };
+        };
+
+        cvat.aifred.getWorkoutImage.implementation = async (workoutId, fileType, fileName) => {
+            const image = await aifredProxy.getWorkoutImage(workoutId, fileType, fileName);
+            return image;
+        };
+
+        cvat.aifred.getWorkoutMetrics.implementation = async (workoutId) => {
+            const image = await aifredProxy.getWorkoutMetrics(workoutId);
+            return image;
         };
 
         return cvat;

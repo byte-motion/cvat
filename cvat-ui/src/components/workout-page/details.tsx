@@ -7,13 +7,7 @@ import moment from 'moment';
 import { Row, Col } from 'antd/lib/grid';
 import Title from 'antd/lib/typography/Title';
 import Text from 'antd/lib/typography/Text';
-
-// import getCore from 'cvat-core-wrapper';
-// import LabelsEditor from 'components/labels-editor/labels-editor';
-// import BugTrackerEditor from 'components/task-page/bug-tracker-editor';
-// import UserSelector from 'components/task-page/user-selector';
-
-// const core = getCore();
+import ProgressBarComponent from './progress-bar';
 
 interface DetailsComponentProps {
     workout: any;
@@ -22,7 +16,6 @@ interface DetailsComponentProps {
 export default function DetailsComponent(props: DetailsComponentProps): JSX.Element {
     const { workout } = props;
 
-    // const dispatch = useDispatch();
     const [workoutName, setWorkoutName] = useState(workout.name);
 
     const preview = (
@@ -33,12 +26,29 @@ export default function DetailsComponent(props: DetailsComponentProps): JSX.Elem
         </div>
     );
 
-    console.log('WERKOUT', workout);
+    const histogram = (
+        <Row justify='space-between' className='cvat-workout-classes'>
+
+            {(Object.keys(workout.histogram).length > 0) && (
+                <Col span={24}>
+                    <Text strong>Classes:</Text>
+                    <ul>
+                        {workout.histogram.classes.map((item: any): JSX.Element => (
+                            <li>
+                                {`${item.name}: ${item.instances} `}
+                                {`(${Math.round((item.instances / workout.histogram.total) * 100)} %)`}
+                            </li>
+                        ))}
+                    </ul>
+                </Col>
+            )}
+        </Row>
+    );
 
     return (
         <div cvat-workout-id={workout.id} className='cvat-workout-details'>
             <Row>
-                <Col>
+                <Col span={12}>
                     <Title
                         level={4}
                         editable={{
@@ -62,34 +72,22 @@ export default function DetailsComponent(props: DetailsComponentProps): JSX.Elem
                 <Col md={16} lg={17} xl={17} xxl={18}>
                     <Row>
                         <Col span={24}>
-                            <Text type='secondary'>
+                            <Text strong>
                                 {`Workout #${workout.id} created`}
                                 {workout.owner ? ` by ${workout.owner.name}` : null}
                                 {` on ${moment(workout.createdDate).format('MMMM Do YYYY')}`}
                             </Text>
                         </Col>
                         <Col span={24}>
-                            <Text>
-                                Augmentation schema:
-                                {' '}
-                                {`${workout.dtl.name} (${workout.dtl.description})`}
-                            </Text>
-                        </Col>
-                        <Col span={24}>
-                            <Text>
-                                Iteration steps:
-                                {' '}
-                                {workout.iterations}
-                            </Text>
-                        </Col>
-                        <Col span={24}>
-                            <Text>
-                                Status:
-                                {' '}
-                                {workout.status}
+                            <Text type='secondary'>
+                                {`Used augmentation schema: ${workout.dtl.name} (${workout.dtl.description})`}
                             </Text>
                         </Col>
                     </Row>
+                    <Row>
+                        <ProgressBarComponent workout={workout} span={24} />
+                    </Row>
+                    {histogram}
                 </Col>
             </Row>
         </div>

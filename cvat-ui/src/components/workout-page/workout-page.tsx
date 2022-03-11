@@ -24,9 +24,11 @@ import { CombinedState } from 'reducers/interfaces';
 // import ModelRunnerDialog from 'components/model-runner-modal/model-runner-dialog';
 // import ImportDatasetModal from 'components/import-dataset-modal/import-dataset-modal';
 // import { useDidUpdateEffect } from 'utils/hooks';
-import { getWorkoutsAsync } from 'actions/workouts-actions';
+import { getWorkoutAsync } from 'actions/workout-actions';
 import DetailsComponent from './details';
 import WorkoutTopBar from './top-bar';
+import ValidationsComponent from './validations';
+import MetricsComponent from './metrics';
 
 interface ParamType {
     id: string;
@@ -37,13 +39,12 @@ export default function WorkoutPageComponent(): JSX.Element {
     const dispatch = useDispatch();
 
     // const history = useHistory();
-    const workouts = useSelector((state: CombinedState) => state.workouts.current).map((workout) => workout.instance);
-    const workoutsFetching = useSelector((state: CombinedState) => state.workouts.fetching);
-    const [workout] = workouts.filter((_workout) => _workout.id === id);
+    const workout = useSelector((state: CombinedState) => state.workout.current?.instance);
+    const workoutFetching = useSelector((state: CombinedState) => state.workout.fetching);
 
     useEffect(() => {
         dispatch(
-            getWorkoutsAsync({ id }),
+            getWorkoutAsync(id),
         );
     }, [id, dispatch]);
 
@@ -96,7 +97,7 @@ export default function WorkoutPageComponent(): JSX.Element {
     //     history.push('/workouts');
     // }
 
-    if (workoutsFetching) {
+    if (workoutFetching) {
         return <Spin size='large' className='cvat-spinner' />;
     }
 
@@ -123,6 +124,8 @@ export default function WorkoutPageComponent(): JSX.Element {
             <Col md={22} lg={18} xl={16} xxl={14}>
                 <WorkoutTopBar workoutInstance={workout} />
                 <DetailsComponent workout={workout} />
+                <MetricsComponent workout={workout} />
+                <ValidationsComponent workout={workout} />
             </Col>
         </Row>
     );

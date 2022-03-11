@@ -5,6 +5,7 @@
     const { ServerError } = require('./exceptions');
     const store = require('store');
     const config = require('./config');
+    const { isBrowser, isNode } = require('browser-or-node');
 
     function generateError(errorData) {
         if (errorData.response) {
@@ -155,6 +156,80 @@
                 return response.data.workouts;
             }
 
+            async function getWorkout(workoutId) {
+                const { aifredAPI, proxy } = config;
+
+                let response = null;
+                try {
+                    response = await Axios.get(`${aifredAPI}/workouts/${workoutId}`, {
+                        proxy,
+                    });
+                } catch (errorData) {
+                    throw generateError(errorData);
+                }
+
+                return response.data;
+            }
+
+            async function getFile(url) {
+                return new Promise((resolve, reject) => {
+                    const { proxy } = config;
+                    Axios.get(
+                        url,
+                        {
+                            proxy,
+                            responseType: 'blob',
+                        },
+                    ).then((result) => {
+                        if (isNode) {
+                            // eslint-disable-next-line no-undef
+                            resolve(global.Buffer.from(result.data, 'binary').toString('base64'));
+                        } else if (isBrowser) {
+                            const reader = new FileReader();
+                            reader.onload = () => {
+                                resolve(reader.result);
+                            };
+                            reader.readAsDataURL(result.data);
+                        }
+                    })
+                        .catch((error) => {
+                            reject(error);
+                        });
+                });
+            }
+
+            async function getWorkoutImage(workoutId, fileType, fileName) {
+                const { aifredAPI } = config;
+                const url = `${aifredAPI}/workouts/${workoutId}/file?filetype=${fileType}&filename=${fileName}`;
+                return getFile(url);
+            }
+
+            async function getWorkoutMetrics(workoutId) {
+                const { aifredAPI, proxy } = config;
+                const queryPeriod = 1000; // in ms
+
+                return new Promise((resolve, reject) => {
+                    const url = `${aifredAPI}/workouts/${workoutId}/metrics`;
+                    async function request() {
+                        Axios.get(url, {
+                            proxy,
+                        })
+                            .then((response) => {
+                                if ([202, 201].includes(response.status)) {
+                                    setTimeout(request, queryPeriod);
+                                } else {
+                                    resolve(getFile(url));
+                                }
+                            })
+                            .catch((errorData) => {
+                                reject(generateError(errorData));
+                            });
+                    }
+
+                    setTimeout(request);
+                });
+            }
+
             Object.defineProperties(
                 this,
                 Object.freeze({
@@ -184,6 +259,22 @@
                     },
                     getWorkouts: {
                         value: getWorkouts,
+                        writable: false,
+                    },
+                    getWorkout: {
+                        value: getWorkout,
+                        writable: false,
+                    },
+                    getFile: {
+                        value: getFile,
+                        writable: false,
+                    },
+                    getWorkoutImage: {
+                        value: getWorkoutImage,
+                        writable: false,
+                    },
+                    getWorkoutMetrics: {
+                        value: getWorkoutMetrics,
                         writable: false,
                     },
                 }),

@@ -20,6 +20,7 @@ import reviewReducer from './review-reducer';
 import exportReducer from './export-reducer';
 import cloudStoragesReducer from './cloud-storages-reducer';
 import workoutsReducer from './workouts-reducer';
+import workoutReducer from './workout-reducer';
 import aifredWorkspaceReducer from './aifred-workspaces-reducer';
 import aifredDTLReducer from './aifred-dtls-reducer';
 
@@ -42,6 +43,7 @@ export default function createRootReducer(): Reducer {
         export: exportReducer,
         cloudStorages: cloudStoragesReducer,
         workouts: workoutsReducer,
+        workout: workoutReducer,
         aifredWorkspaces: aifredWorkspaceReducer,
         aifredDTLs: aifredDTLReducer,
     });

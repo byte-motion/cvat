@@ -138,3 +138,39 @@
     display: flex;
     flex-wrap: wrap;
 }
+
+.cvat-workout-progress {
+    width: 100%;
+}
+
+.cvat-workout-progress-progress {
+    color: $inprogress-progress-color;
+    fill: $inprogress-progress-color;
+    margin-right: 5px;
+    text-transform: capitalize;
+}
+
+.cvat-workout-completed-progress div.ant-progress-bg {
+    background: $completed-progress-color !important;
+}
+
+.cvat-workout-pending-progress {
+    color: $pending-progress-color;
+    fill: $pending-progress-color;
+    margin-right: 5px;
+    text-transform: capitalize;
+}
+
+.cvat-workout-error-progress {
+    color: $danger-icon-color;
+    fill: $danger-icon-color;
+    margin-right: 5px;
+    text-transform: capitalize;
+}
+
+.cvat-workout-completed-progress {
+    color: $completed-progress-color;
+    fill: $completed-progress-color;
+    margin-right: 5px;
+    text-transform: capitalize;
+}

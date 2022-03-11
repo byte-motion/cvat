@@ -19,6 +19,9 @@ export enum WorkoutsActionTypes {
     GET_WORKOUTS = 'GET_WORKOUTS',
     GET_WORKOUTS_SUCCESS = 'GET_WORKOUTS_SUCCESS',
     GET_WORKOUTS_FAILED = 'GET_WORKOUTS_FAILED',
+    GET_WORKOUT = 'GET_WORKOUT',
+    GET_WORKOUT_SUCCESS = 'GET_WORKOUT_SUCCESS',
+    GET_WORKOUT_FAILED = 'GET_WORKOUT_FAILED',
 }
 
 export const workoutActions = {
@@ -42,6 +45,12 @@ export const workoutActions = {
         createAction(WorkoutsActionTypes.GET_WORKOUTS_SUCCESS, { array, count })
     ),
     getWorkoutsFailed: (error: any) => createAction(WorkoutsActionTypes.GET_WORKOUTS_FAILED, { error }),
+
+    getWorkout: () => createAction(WorkoutsActionTypes.GET_WORKOUT),
+    getWorkoutSuccess: (workout: any) => (
+        createAction(WorkoutsActionTypes.GET_WORKOUT_SUCCESS, { workout })
+    ),
+    getWorkoutFailed: (error: any) => createAction(WorkoutsActionTypes.GET_WORKOUT_FAILED, { error }),
 };
 
 export const createWorkoutAsync = (
@@ -92,6 +101,21 @@ export function getWorkoutsAsync(
         const array = Array.from(result);
 
         dispatch(workoutActions.getWorkoutsSuccess(array, result.count));
+    };
+}
+
+export function getWorkoutAsync(
+    id: number,
+): ThunkAction {
+    return async (dispatch: ActionCreator<Dispatch>): Promise<void> => {
+        dispatch(workoutActions.getWorkout());
+
+        try {
+            const result = await cvat.aifred.getWorkout(id);
+            dispatch(workoutActions.getWorkoutSuccess(result));
+        } catch (error) {
+            dispatch(workoutActions.getWorkoutFailed(error));
+        }
     };
 }
 

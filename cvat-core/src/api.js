@@ -923,6 +923,54 @@ function build() {
                 const result = await PluginRegistry.apiWrapper(cvat.aifred.getWorkouts, filter);
                 return result;
             },
+            /**
+             * Method returns workout by its ID
+             * @method getWorkout
+             * @async
+             * @memberof module:API.cvat.aifred
+             * @param {number} workoutId ID of workout
+             * @returns {Object} response data
+             * @throws {module:API.cvat.exceptions.PluginError}
+             * @throws {module:API.cvat.exceptions.ServerError}
+             */
+            async getWorkout(workoutId) {
+                const result = await PluginRegistry.apiWrapper(cvat.aifred.getWorkout, workoutId);
+                return result;
+            },
+            /**
+             * Method returns workout by its ID
+             * @method getWorkoutImage
+             * @async
+             * @memberof module:API.cvat.aifred
+             * @param {number} workoutId ID of workout
+             * @param {string} fileType type like `validations`
+             * @param {string} fileName name of image file
+             * @returns {Object} response data
+             * @throws {module:API.cvat.exceptions.PluginError}
+             * @throws {module:API.cvat.exceptions.ServerError}
+             */
+            async getWorkoutImage(workoutId, fileType, fileName) {
+                const result = await PluginRegistry.apiWrapper(
+                    cvat.aifred.getWorkoutImage, workoutId, fileType, fileName,
+                );
+                return result;
+            },
+            /**
+             * Method returns workout metrics by its ID
+             * @method getWorkoutMetrics
+             * @async
+             * @memberof module:API.cvat.aifred
+             * @param {number} workoutId ID of workout
+             * @returns {Object} response data
+             * @throws {module:API.cvat.exceptions.PluginError}
+             * @throws {module:API.cvat.exceptions.ServerError}
+             */
+            async getWorkoutMetrics(workoutId) {
+                const result = await PluginRegistry.apiWrapper(
+                    cvat.aifred.getWorkoutMetrics, workoutId,
+                );
+                return result;
+            },
         },
         /**
          * Namespace is used for access to classes

@@ -33,8 +33,6 @@ export default function WorkoutListComponent(): JSX.Element {
         xxl: 16,
     };
 
-    // console.log('WORKOUTS', workouts);
-
     return (
         <>
             <Row justify='center' align='middle' className='cvat-workout-list-content'>
