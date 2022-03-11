@@ -34,7 +34,7 @@ export default function DetailsComponent(props: DetailsComponentProps): JSX.Elem
                     <Text strong>Classes:</Text>
                     <ul>
                         {workout.histogram.classes.map((item: any): JSX.Element => (
-                            <li>
+                            <li key={item.name}>
                                 {`${item.name}: ${item.instances} `}
                                 {`(${Math.round((item.instances / workout.histogram.total) * 100)} %)`}
                             </li>

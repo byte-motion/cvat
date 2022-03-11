@@ -6,14 +6,13 @@ import moment from 'moment';
 import { RouteComponentProps } from 'react-router';
 import { withRouter } from 'react-router-dom';
 import Text from 'antd/lib/typography/Text';
-import Progress from 'antd/lib/progress';
 import Button from 'antd/lib/button';
 import { Row, Col } from 'antd/lib/grid';
 import { Dropdown } from 'antd';
 import Icon from '@ant-design/icons';
 import { MenuIcon } from 'icons';
 
-import { Workout, WorkoutStatus } from 'reducers/interfaces';
+import { Workout } from 'reducers/interfaces';
 import WorkoutActionsMenuComponent from './actions-menu';
 import ProgressBarComponent from '../workout-page/progress-bar';
 
@@ -82,67 +81,6 @@ class WorkoutItemComponent extends React.PureComponent<Props & RouteComponentPro
                         {`${type.slice(0, -1)} #${id}`}
                     </Button>
                 </Text>
-            </Col>
-        );
-    }
-
-    private renderProgress(): JSX.Element {
-        const { workoutInstance } = this.props;
-        const numOfIterations = workoutInstance.instance.iterations;
-        const numOfCompleted = (workoutInstance.instance.iteration === 0) ?
-            0 : workoutInstance.instance.iteration + 1; // need to add 1
-        const timeLeft = (workoutInstance.instance.eta < 0) ? 'N/A' : this.formatSeconds(workoutInstance.instance.eta);
-        const { status } = workoutInstance.instance;
-
-        let progressColor = null;
-        if (status === WorkoutStatus.FINISHED) {
-            progressColor = 'cvat-workout-completed-progress';
-        } else if (status === WorkoutStatus.ERROR) {
-            progressColor = 'cvat-workout-error-progress';
-        } else if ([WorkoutStatus.STOPPED, WorkoutStatus.QUEUED, WorkoutStatus.NEW].includes(status)) {
-            progressColor = 'cvat-workout-pending-progress';
-        } else {
-            progressColor = 'cvat-workout-progress-progress';
-        }
-
-        const progressText = (
-            <Text strong className={progressColor}>
-                {status}
-            </Text>
-        );
-
-        const workoutProgress = numOfCompleted / numOfIterations;
-
-        return (
-            <Col span={6}>
-                <Row justify='space-between' align='top'>
-                    <Col>
-                        <svg height='8' width='8' className={progressColor}>
-                            <circle cx='4' cy='4' r='4' strokeWidth='0' />
-                        </svg>
-                        {progressText}
-                    </Col>
-                    <Col>
-                        <Text type='secondary'>{`${numOfCompleted} of ${numOfIterations} iterations`}</Text>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col span={24}>
-                        <Progress
-                            className={`${progressColor} cvat-workout-progress`}
-                            percent={workoutProgress * 100}
-                            strokeColor='#1890FF'
-                            showInfo={false}
-                            strokeWidth={5}
-                            size='small'
-                        />
-                    </Col>
-                </Row>
-                <Row justify='space-between' align='top'>
-                    <Col span={24}>
-                        <Text type='secondary'>{`ETA: ${timeLeft}`}</Text>
-                    </Col>
-                </Row>
             </Col>
         );
     }
