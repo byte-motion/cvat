@@ -24,7 +24,7 @@ export default function ProgressBarComponent(props: Props): JSX.Element {
         return `${hours}h ${minutes}m ${secs}s`;
     };
     const numOfIterations = workout.iterations;
-    const numOfCompleted = (workout.iteration === 0) ? 0 : workout.iteration + 1; // need to add 1
+    const numOfCompleted = workout.iteration;
     const timeLeft = (workout.eta < 0) ? 'N/A' : formatSeconds(workout.eta);
 
     let progressColor = null;
