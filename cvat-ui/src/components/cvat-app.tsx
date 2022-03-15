@@ -25,6 +25,7 @@ import TasksPageContainer from 'containers/tasks-page/tasks-page';
 import LoginWithTokenComponent from 'components/login-with-token/login-with-token';
 import ExportDatasetModal from 'components/export-dataset/export-dataset-modal';
 import CreateWorkoutModal from 'components/create-workout/create-workout-modal';
+import ExportOcellusModelModal from 'components/export-ocellus/export-ocellus-modal';
 import CreateTaskPageContainer from 'containers/create-task-page/create-task-page';
 import TaskPageContainer from 'containers/task-page/task-page';
 import ModelsPageContainer from 'containers/models-page/models-page';
@@ -378,6 +379,8 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
                                 </GlobalHotKeys>
                                 {/* eslint-disable-next-line */}
                                 <CreateWorkoutModal />
+                                {/* eslint-disable-next-line */}
+                                <ExportOcellusModelModal />
                                 {/* eslint-disable-next-line */}
                                 <ExportDatasetModal />
                                 {/* eslint-disable-next-line */}

@@ -133,20 +133,24 @@ export interface WorkoutState {
     modalVisible: boolean;
     activities: {
         creates: {
-            id: number | null,
-            error: string
-        },
+            id: number | null;
+            error: string;
+        };
         validations: {
             images: WorkoutValidation[];
             fetching: boolean;
-        }
+        };
         metrics: {
             image: string | null;
             fetching: boolean;
-        }
+        };
     };
 }
 
+export interface OcellusExportState {
+    workout: any;
+    modalVisible: boolean;
+}
 export interface WorkoutsState {
     gettingQuery: WorkoutsQuery;
     count: number;
@@ -792,6 +796,7 @@ export interface CombinedState {
     workout: WorkoutState;
     aifredWorkspaces: AIfredWorkspacesState;
     aifredDTLs: AIfredDTLsState;
+    exportOcellus: OcellusExportState;
 }
 
 export enum DimensionType {

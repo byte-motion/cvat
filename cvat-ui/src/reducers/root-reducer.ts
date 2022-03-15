@@ -23,6 +23,7 @@ import workoutsReducer from './workouts-reducer';
 import workoutReducer from './workout-reducer';
 import aifredWorkspaceReducer from './aifred-workspaces-reducer';
 import aifredDTLReducer from './aifred-dtls-reducer';
+import exportOcellusReducer from './export-ocellus-reducer';
 
 export default function createRootReducer(): Reducer {
     return combineReducers({
@@ -46,5 +47,6 @@ export default function createRootReducer(): Reducer {
         workout: workoutReducer,
         aifredWorkspaces: aifredWorkspaceReducer,
         aifredDTLs: aifredDTLReducer,
+        exportOcellus: exportOcellusReducer,
     });
 }

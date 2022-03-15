@@ -204,19 +204,17 @@
                 return getFile(url);
             }
 
-            async function getWorkoutMetrics(workoutId) {
-                const { aifredAPI, proxy } = config;
-                const queryPeriod = 1000; // in ms
+            async function getURL(url, period) {
+                const { proxy } = config;
 
                 return new Promise((resolve, reject) => {
-                    const url = `${aifredAPI}/workouts/${workoutId}/metrics`;
                     async function request() {
                         Axios.get(url, {
                             proxy,
                         })
                             .then((response) => {
                                 if ([202, 201].includes(response.status)) {
-                                    setTimeout(request, queryPeriod);
+                                    setTimeout(request, period);
                                 } else {
                                     resolve(getFile(url));
                                 }
@@ -225,9 +223,24 @@
                                 reject(generateError(errorData));
                             });
                     }
-
                     setTimeout(request);
                 });
+            }
+
+            async function getWorkoutMetrics(workoutId) {
+                const { aifredAPI } = config;
+                const queryPeriod = 1000; // in ms
+
+                const url = `${aifredAPI}/workouts/${workoutId}/metrics`;
+                return getURL(url, queryPeriod);
+            }
+
+            async function getOcellusModel(workoutId, fileName) {
+                const { aifredAPI } = config;
+                const queryPeriod = 2000; // in ms
+                const url = `${aifredAPI}/workouts/${workoutId}/ocellus?filename=${fileName}`;
+
+                return getURL(url, queryPeriod);
             }
 
             Object.defineProperties(
@@ -275,6 +288,10 @@
                     },
                     getWorkoutMetrics: {
                         value: getWorkoutMetrics,
+                        writable: false,
+                    },
+                    getOcellusModel: {
+                        value: getOcellusModel,
                         writable: false,
                     },
                 }),

@@ -971,6 +971,23 @@ function build() {
                 );
                 return result;
             },
+            /**
+             * Method returns workout ocellus model URL
+             * @method getOcellusModel
+             * @async
+             * @memberof module:API.cvat.aifred
+             * @param {number} workoutId ID of workout
+             * @param {string} fileName Ocellus model name
+             * @returns {Object} response data
+             * @throws {module:API.cvat.exceptions.PluginError}
+             * @throws {module:API.cvat.exceptions.ServerError}
+             */
+            async getOcellusModel(workoutId, fileName) {
+                const result = await PluginRegistry.apiWrapper(
+                    cvat.aifred.getOcellusModel, workoutId, fileName,
+                );
+                return result;
+            },
         },
         /**
          * Namespace is used for access to classes

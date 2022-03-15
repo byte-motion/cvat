@@ -435,6 +435,11 @@
             return image;
         };
 
+        cvat.aifred.getOcellusModel.implementation = async (workoutId, fileName) => {
+            const model = await aifredProxy.getOcellusModel(workoutId, fileName);
+            return model;
+        };
+
         return cvat;
     }
 

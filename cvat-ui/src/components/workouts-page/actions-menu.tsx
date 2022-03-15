@@ -3,10 +3,11 @@
 // SPDX-License-Identifier: MIT
 import React, { useCallback } from 'react';
 // import React from 'react';
-// import { useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import Modal from 'antd/lib/modal';
 import Menu from 'antd/lib/menu';
 import { WorkoutStatus } from 'reducers/interfaces';
+import { exportActions } from 'actions/export-ocellus-actions';
 
 // import { deleteProjectAsync } from 'actions/projects-actions';
 // import { exportActions } from 'actions/export-actions';
@@ -19,7 +20,7 @@ export default function WorkoutActionsMenuComponent(props: Props): JSX.Element {
     const { workoutInstance } = props;
     const { status, id } = workoutInstance;
 
-    // const dispatch = useDispatch();
+    const dispatch = useDispatch();
 
     const onDeleteWorkout = useCallback((): void => {
         Modal.confirm({
@@ -41,11 +42,6 @@ export default function WorkoutActionsMenuComponent(props: Props): JSX.Element {
     const menuItems: JSX.Element[] = [];
 
     if (status === WorkoutStatus.TRAINING) {
-        // menuItems.push(
-        //     <Menu.Item key='update-metrics' onClick={() => { console.log('update metrics:', workoutInstance); }}>
-        //         Update metrics
-        //     </Menu.Item>,
-        // );
         menuItems.push(
             <Menu.Item key='stop-workout' onClick={() => { console.log('stop workout:', workoutInstance); }}>
                 Stop workout
@@ -55,7 +51,7 @@ export default function WorkoutActionsMenuComponent(props: Props): JSX.Element {
 
     if (status === WorkoutStatus.FINISHED) {
         menuItems.push(
-            <Menu.Item key='export-workout' onClick={() => { console.log('export workout:', workoutInstance); }}>
+            <Menu.Item key='export-ocellus-model' onClick={() => { dispatch(exportActions.openExportModal(workoutInstance)); }}>
                 Export to Ocellus
             </Menu.Item>,
         );
