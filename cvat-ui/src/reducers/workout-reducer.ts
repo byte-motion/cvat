@@ -174,7 +174,6 @@ export default (state: WorkoutState = defaultState, action: WorkoutActions): Wor
                 },
             };
         }
-
         default:
             return state;
     }

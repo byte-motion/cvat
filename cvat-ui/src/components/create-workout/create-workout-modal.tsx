@@ -42,7 +42,7 @@ function CreateWorkoutModal(): JSX.Element {
     const [workspace] = useState(workspaces.length ? workspaces[0].id : undefined);
     const history = useHistory();
 
-    const fetchDTLs = (workspaceId: number) => {
+    const fetchDTLs = (workspaceId: number): void => {
         dispatch(getAIfredDTLsAsync(workspaceId));
     };
 
@@ -71,7 +71,7 @@ function CreateWorkoutModal(): JSX.Element {
         dispatch(workoutActions.closeWorkoutModal());
     };
 
-    const workspaceChange = (value: SelectValue) => {
+    const workspaceChange = (value: SelectValue): void => {
         form.setFieldsValue({ selectedDTL: undefined });
         fetchDTLs(Number(value));
     };
