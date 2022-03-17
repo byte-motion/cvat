@@ -27,9 +27,10 @@ export default function DetailsComponent(props: DetailsComponentProps): JSX.Elem
         url: '/tasks',
     };
 
-    if (history.location.state?.from === 'workouts') {
-        backButton.name = 'workouts';
-        backButton.url = '/workouts';
+    if (history.location.state?.from) {
+        // little "magic" to use proper plural form ;)
+        [backButton.name] = history.location.state.from.split('s/');
+        backButton.url = `/${history.location.state.from}`;
     } else if (taskInstance.projectId) {
         backButton.name = 'project';
         backButton.url = `/projects/${taskInstance.projectId}`;
@@ -40,9 +41,7 @@ export default function DetailsComponent(props: DetailsComponentProps): JSX.Elem
             <Col>
                 <Button onClick={() => history.push(backButton.url)} type='link' size='large'>
                     <LeftOutlined />
-                    Back to
-                    {' '}
-                    {backButton.name}
+                    {`Back to ${backButton.name}`}
                 </Button>
             </Col>
             <Col>

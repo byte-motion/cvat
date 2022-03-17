@@ -4,9 +4,11 @@
 
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router';
 import moment from 'moment';
 import { Row, Col } from 'antd/lib/grid';
 import Title from 'antd/lib/typography/Title';
+import Button from 'antd/lib/button';
 import Text from 'antd/lib/typography/Text';
 import { updateWorkoutAsync } from 'actions/workout-actions';
 import ProgressBarComponent from './progress-bar';
@@ -20,6 +22,9 @@ export default function DetailsComponent(props: DetailsComponentProps): JSX.Elem
 
     const dispatch = useDispatch();
     const [workoutName, setWorkoutName] = useState(workout.name);
+    const history = useHistory();
+
+    const [dataType, dataId] = workout.data_url.split('/').slice(-2);
 
     const preview = (
         <div className='cvat-workout-preview-wrapper'>
@@ -85,6 +90,21 @@ export default function DetailsComponent(props: DetailsComponentProps): JSX.Elem
                         <Col span={24}>
                             <Text type='secondary'>
                                 {`Used augmentation schema: ${workout.dtl.name} (${workout.dtl.description})`}
+                            </Text>
+                        </Col>
+                        <Col span={24}>
+                            <Text type='secondary'>
+                                Used data set:
+                                <Button
+                                    href={`/${dataType}/${dataId}`}
+                                    type='text'
+                                    onClick={(e: React.MouseEvent): void => {
+                                        e.preventDefault();
+                                        history.push(`/${dataType}/${dataId}`, { from: `workouts/${workout.id}` });
+                                    }}
+                                >
+                                    {`${dataType.slice(0, -1)} #${dataId}`}
+                                </Button>
                             </Text>
                         </Col>
                     </Row>

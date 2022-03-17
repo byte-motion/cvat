@@ -30,9 +30,7 @@ export default function ProjectTopBar(props: DetailsComponentProps): JSX.Element
             <Col>
                 <Button onClick={() => history.push(`/${backTo}`)} type='link' size='large'>
                     <LeftOutlined />
-                    Back to
-                    {' '}
-                    {backTo}
+                    {`Back to ${backTo.split('s/')[0]}`}
                 </Button>
             </Col>
             <Col className='cvat-project-top-bar-actions'>
