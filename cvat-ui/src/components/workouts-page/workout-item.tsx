@@ -111,7 +111,7 @@ class WorkoutItemComponent extends React.PureComponent<Props & RouteComponentPro
                 <Row justify='end'>
                     <Col className='cvat-item-open-task-actions'>
                         <Text className='cvat-text-color'>Actions</Text>
-                        <Dropdown overlay={<WorkoutActionsMenuComponent workoutInstance={workoutInstance} />}>
+                        <Dropdown overlay={<WorkoutActionsMenuComponent workoutInstance={workoutInstance.instance} />}>
                             <Icon className='cvat-menu-icon' component={MenuIcon} />
                         </Dropdown>
                     </Col>

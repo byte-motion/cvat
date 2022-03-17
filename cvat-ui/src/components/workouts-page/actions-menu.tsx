@@ -2,15 +2,14 @@
 //
 // SPDX-License-Identifier: MIT
 import React, { useCallback } from 'react';
-// import React from 'react';
 import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router';
 import Modal from 'antd/lib/modal';
 import Menu from 'antd/lib/menu';
+import Notification from 'antd/lib/notification';
 import { WorkoutStatus } from 'reducers/interfaces';
 import { exportActions } from 'actions/export-ocellus-actions';
-
-// import { deleteProjectAsync } from 'actions/projects-actions';
-// import { exportActions } from 'actions/export-actions';
+import { deleteWorkoutAsync, stopWorkoutTrainingAsync } from 'actions/workout-actions';
 
 interface Props {
     workoutInstance: any;
@@ -18,18 +17,24 @@ interface Props {
 
 export default function WorkoutActionsMenuComponent(props: Props): JSX.Element {
     const { workoutInstance } = props;
-    const { status, id } = workoutInstance;
 
     const dispatch = useDispatch();
+    const history = useHistory();
 
     const onDeleteWorkout = useCallback((): void => {
         Modal.confirm({
-            title: `The workout ${id} will be deleted`,
+            title: `The workout '${workoutInstance.name}' #${workoutInstance.id} will be deleted`,
             content: 'All related data will be lost. Continue?',
             className: 'cvat-modal-confirm-remove-workout',
             onOk: () => {
-                console.log('DELETING WORKOUT :P');
-                // dispatch(deleteProjectAsync(workoutInstance));
+                dispatch(deleteWorkoutAsync(workoutInstance));
+                history.push('/workouts');
+                Notification.info({
+                    message: 'Deleting workout',
+                    description:
+                        `Workout '${workoutInstance.name}' #${workoutInstance.id} will be deleted.`,
+                    className: 'cvat-notification-notice-delete-workout-start',
+                });
             },
             okButtonProps: {
                 type: 'primary',
@@ -39,17 +44,39 @@ export default function WorkoutActionsMenuComponent(props: Props): JSX.Element {
         });
     }, []);
 
+    const onStopWorkout = useCallback((): void => {
+        Modal.confirm({
+            title: `The workout ${workoutInstance.id} training will be stopped`,
+            content: 'Do you want to continue?',
+            className: 'cvat-modal-confirm-stop-workout',
+            onOk: () => {
+                dispatch(stopWorkoutTrainingAsync(workoutInstance));
+                Notification.info({
+                    message: 'Stopping workout',
+                    description:
+                        `Trying to stop training of workout '${workoutInstance.name}' #${workoutInstance.id}.`,
+                    className: 'cvat-notification-notice-stopping-workout-start',
+                });
+            },
+            okButtonProps: {
+                type: 'primary',
+                danger: true,
+            },
+            okText: 'Stop',
+        });
+    }, []);
+
     const menuItems: JSX.Element[] = [];
 
-    if (status === WorkoutStatus.TRAINING) {
+    if (workoutInstance.status === WorkoutStatus.TRAINING) {
         menuItems.push(
-            <Menu.Item key='stop-workout' onClick={() => { console.log('stop workout:', workoutInstance); }}>
+            <Menu.Item key='stop-workout-training' onClick={onStopWorkout}>
                 Stop workout
             </Menu.Item>,
         );
     }
 
-    if (status === WorkoutStatus.FINISHED) {
+    if (workoutInstance.status === WorkoutStatus.FINISHED) {
         menuItems.push(
             <Menu.Item key='export-ocellus-model' onClick={() => { dispatch(exportActions.openExportModal(workoutInstance)); }}>
                 Export to Ocellus

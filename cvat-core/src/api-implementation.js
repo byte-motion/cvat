@@ -440,6 +440,21 @@
             return model;
         };
 
+        cvat.aifred.stopTraining.implementation = async (workoutId) => {
+            const model = await aifredProxy.stopTraining(workoutId);
+            return model;
+        };
+
+        cvat.aifred.deleteWorkout.implementation = async (workoutId) => {
+            const model = await aifredProxy.deleteWorkout(workoutId);
+            return model;
+        };
+
+        cvat.aifred.updateWorkout.implementation = async (workoutId, name, instance, dtlId, iterations) => {
+            const result = await aifredProxy.updateWorkout(workoutId, name, instance, dtlId, iterations);
+            return result;
+        };
+
         return cvat;
     }
 

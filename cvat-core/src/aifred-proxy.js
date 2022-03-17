@@ -243,6 +243,94 @@
                 return getURL(url, queryPeriod);
             }
 
+            async function stopTraining(workoutId) {
+                const { aifredAPI, proxy } = config;
+                const queryPeriod = 1000; // in ms
+
+                const url = `${aifredAPI}/workouts/${workoutId}/stop`;
+
+                return new Promise((resolve, reject) => {
+                    async function request() {
+                        Axios.patch(url, {
+                            proxy,
+                        })
+                            .then((response) => {
+                                if ([202, 201].includes(response.status)) {
+                                    setTimeout(request, queryPeriod);
+                                } else {
+                                    resolve(response.data);
+                                }
+                            })
+                            .catch((errorData) => {
+                                reject(generateError(errorData));
+                            });
+                    }
+                    setTimeout(request);
+                });
+            }
+
+            async function deleteWorkout(workoutId) {
+                const { aifredAPI, proxy } = config;
+                const queryPeriod = 1000; // in ms
+
+                const url = `${aifredAPI}/workouts/${workoutId}`;
+
+                return new Promise((resolve, reject) => {
+                    async function request(iterated = false) {
+                        Axios.delete(url, {
+                            proxy,
+                        })
+                            .then((response) => {
+                                if ([202, 201].includes(response.status)) {
+                                    setTimeout(request, queryPeriod, true);
+                                } else {
+                                    resolve(true);
+                                }
+                            })
+                            .catch((errorData) => {
+                                if (iterated && errorData.response.status === 404) {
+                                    // Looks legit - 404 after started delete operation
+                                    resolve(true);
+                                }
+                                reject(generateError(errorData));
+                            });
+                    }
+                    setTimeout(request);
+                });
+            }
+
+            async function updateWorkout(workoutId, name, dataURL, dtlId, iterations) {
+                const { aifredAPI, proxy } = config;
+
+                const data = {
+                    name,
+                    iterations,
+                    data_url: dataURL,
+                    dtl_id: dtlId,
+                };
+
+                // Remove null values from query
+                Object.keys(data).forEach((key) => {
+                    if (data[key] === null) {
+                        delete data[key];
+                    }
+                });
+
+                let response = null;
+                try {
+                    response = await Axios.patch(`${aifredAPI}/workouts/${workoutId}`, JSON.stringify(data), {
+                        proxy,
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
+                } catch (errorData) {
+                    throw generateError(errorData);
+                }
+
+                return response.data;
+            }
+
             Object.defineProperties(
                 this,
                 Object.freeze({
@@ -292,6 +380,18 @@
                     },
                     getOcellusModel: {
                         value: getOcellusModel,
+                        writable: false,
+                    },
+                    stopTraining: {
+                        value: stopTraining,
+                        writable: false,
+                    },
+                    deleteWorkout: {
+                        value: deleteWorkout,
+                        writable: false,
+                    },
+                    updateWorkout: {
+                        value: updateWorkout,
                         writable: false,
                     },
                 }),

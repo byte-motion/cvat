@@ -22,6 +22,12 @@ const defaultState: WorkoutState = {
             image: null,
             fetching: false,
         },
+        deletes: {
+            error: '',
+        },
+        stops: {
+            error: '',
+        },
     },
 };
 
@@ -170,6 +176,70 @@ export default (state: WorkoutState = defaultState, action: WorkoutActions): Wor
                     metrics: {
                         image: null,
                         fetching: false,
+                    },
+                },
+            };
+        }
+        case WorkoutActionTypes.STOP_WORKOUT_TRAINING:
+            return {
+                ...state,
+                activities: {
+                    ...state.activities,
+                    stops: {
+                        error: '',
+                    },
+                },
+            };
+        case WorkoutActionTypes.STOP_WORKOUT_TRAINING_SUCCESS: {
+            return {
+                ...state,
+                activities: {
+                    ...state.activities,
+                    stops: {
+                        error: '',
+                    },
+                },
+            };
+        }
+        case WorkoutActionTypes.STOP_WORKOUT_TRAINING_FAILED: {
+            return {
+                ...state,
+                activities: {
+                    ...state.activities,
+                    stops: {
+                        error: action.payload.error,
+                    },
+                },
+            };
+        }
+        case WorkoutActionTypes.DELETE_WORKOUT:
+            return {
+                ...state,
+                activities: {
+                    ...state.activities,
+                    deletes: {
+                        error: '',
+                    },
+                },
+            };
+        case WorkoutActionTypes.DELETE_WORKOUT_SUCCESS: {
+            return {
+                ...state,
+                activities: {
+                    ...state.activities,
+                    deletes: {
+                        error: '',
+                    },
+                },
+            };
+        }
+        case WorkoutActionTypes.DELETE_WORKOUT_FAILED: {
+            return {
+                ...state,
+                activities: {
+                    ...state.activities,
+                    deletes: {
+                        error: action.payload.error,
                     },
                 },
             };

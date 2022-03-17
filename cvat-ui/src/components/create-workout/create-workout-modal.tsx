@@ -130,11 +130,7 @@ function CreateWorkoutModal(): JSX.Element {
                                     >
                                         <GroupOutlined />
                                         <Text>
-                                            {ws.name}
-                                            {' '}
-                                            (
-                                            {ws.description}
-                                            )
+                                            {`${ws.name} (${ws.description})`}
                                         </Text>
                                     </Select.Option>
                                 ),
@@ -144,6 +140,7 @@ function CreateWorkoutModal(): JSX.Element {
                 <Form.Item
                     name='selectedDTL'
                     label='Augmentation schema'
+                    rules={[{ required: true, message: 'Augmentation schema is required' }]}
                 >
                     <Select placeholder='Select schema' className='cvat-modal-workout-select'>
                         {dtls && dtls

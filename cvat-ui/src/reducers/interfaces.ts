@@ -144,6 +144,12 @@ export interface WorkoutState {
             image: string | null;
             fetching: boolean;
         };
+        deletes: {
+            error: string;
+        };
+        stops: {
+            error: string;
+        };
     };
 }
 
@@ -478,7 +484,12 @@ export interface NotificationsState {
             fetching: null | ErrorState;
             updating: null | ErrorState;
             deleting: null | ErrorState;
-        }
+        };
+        workout: {
+            stopping: null | ErrorState;
+            deleting: null | ErrorState;
+            updating: null | ErrorState;
+        };
     };
     messages: {
         tasks: {
@@ -497,7 +508,11 @@ export interface NotificationsState {
         };
         workouts: {
             creatingDone: string;
-        }
+        };
+        workout: {
+            deletingDone: string;
+            stoppingDone: string;
+        };
     };
 }
 

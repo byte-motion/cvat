@@ -988,6 +988,57 @@ function build() {
                 );
                 return result;
             },
+            /**
+             * Method stops running training in workout session
+             * @method stopTraining
+             * @async
+             * @memberof module:API.cvat.aifred
+             * @param {number} workoutId ID of workout
+             * @returns {Object} response data
+             * @throws {module:API.cvat.exceptions.PluginError}
+             * @throws {module:API.cvat.exceptions.ServerError}
+             */
+            async stopTraining(workoutId) {
+                const result = await PluginRegistry.apiWrapper(
+                    cvat.aifred.stopTraining, workoutId,
+                );
+                return result;
+            },
+            /**
+             * Method deletes workout and stop workout session if running
+             * @method deleteWorkout
+             * @async
+             * @memberof module:API.cvat.aifred
+             * @param {number} workoutId ID of workout
+             * @returns {Object} response data
+             * @throws {module:API.cvat.exceptions.PluginError}
+             * @throws {module:API.cvat.exceptions.ServerError}
+             */
+            async deleteWorkout(workoutId) {
+                const result = await PluginRegistry.apiWrapper(
+                    cvat.aifred.deleteWorkout, workoutId,
+                );
+                return result;
+            },
+            /**
+             * Method updates workout and returns information about it
+             * @method updateWorkout
+             * @async
+             * @memberof module:API.cvat.aifred
+             * @param {number} workoutId Workout ID
+             * @param {string} name ID of workspace
+             * @param {string} instance ID of workspace
+             * @param {number} dtlId
+             * @param {number} iterations
+             * @returns {Object} response data
+             * @throws {module:API.cvat.exceptions.PluginError}
+             * @throws {module:API.cvat.exceptions.ServerError}
+             */
+            async updateWorkout(workoutId, name, instance, dtlId, iterations) {
+                const result = await PluginRegistry.apiWrapper(cvat.aifred.updateWorkout, workoutId, name, instance,
+                    dtlId, iterations);
+                return result;
+            },
         },
         /**
          * Namespace is used for access to classes

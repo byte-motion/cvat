@@ -3,10 +3,12 @@
 // SPDX-License-Identifier: MIT
 
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import moment from 'moment';
 import { Row, Col } from 'antd/lib/grid';
 import Title from 'antd/lib/typography/Title';
 import Text from 'antd/lib/typography/Text';
+import { updateWorkoutAsync } from 'actions/workout-actions';
 import ProgressBarComponent from './progress-bar';
 
 interface DetailsComponentProps {
@@ -16,6 +18,7 @@ interface DetailsComponentProps {
 export default function DetailsComponent(props: DetailsComponentProps): JSX.Element {
     const { workout } = props;
 
+    const dispatch = useDispatch();
     const [workoutName, setWorkoutName] = useState(workout.name);
 
     const preview = (
@@ -55,6 +58,7 @@ export default function DetailsComponent(props: DetailsComponentProps): JSX.Elem
                             onChange: (value: string): void => {
                                 setWorkoutName(value);
                                 workout.name = value;
+                                dispatch(updateWorkoutAsync(workout));
                             },
                         }}
                         className='cvat-text-color cvat-workout-name'

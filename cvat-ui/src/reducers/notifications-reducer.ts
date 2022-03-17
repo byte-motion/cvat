@@ -19,6 +19,7 @@ import { ReviewActionTypes } from 'actions/review-actions';
 import { ExportActionTypes } from 'actions/export-actions';
 import { CloudStorageActionTypes } from 'actions/cloud-storage-actions';
 import { WorkoutsActionTypes } from 'actions/workouts-actions';
+import { WorkoutActionTypes } from 'actions/workout-actions';
 
 import getCore from 'cvat-core-wrapper';
 import { NotificationsState } from './interfaces';
@@ -127,6 +128,11 @@ const defaultState: NotificationsState = {
             updating: null,
             deleting: null,
         },
+        workout: {
+            stopping: null,
+            deleting: null,
+            updating: null,
+        },
     },
     messages: {
         tasks: {
@@ -145,6 +151,10 @@ const defaultState: NotificationsState = {
         },
         workouts: {
             creatingDone: '',
+        },
+        workout: {
+            deletingDone: '',
+            stoppingDone: '',
         },
     },
 };
@@ -1349,6 +1359,93 @@ export default function (state = defaultState, action: AnyAction): Notifications
                         ...state.messages.workouts,
                         creatingDone: `Workout '${name}' has been created successfully ` +
                             `<a href="/workouts/${workoutID}">Open workout</a>`,
+                    },
+                },
+            };
+        }
+
+        case WorkoutActionTypes.STOP_WORKOUT_TRAINING_FAILED: {
+            const { workout, error } = action.payload;
+
+            return {
+                ...state,
+                errors: {
+                    ...state.errors,
+                    workout: {
+                        ...state.errors.workout,
+                        stopping: {
+                            message:
+                                `Could not stop training of workout '${workout.name}' #${workout.id}`,
+                            reason: error.toString(),
+                        },
+                    },
+                },
+            };
+        }
+
+        case WorkoutActionTypes.STOP_WORKOUT_TRAINING_SUCCESS: {
+            const { workout } = action.payload;
+
+            return {
+                ...state,
+                messages: {
+                    ...state.messages,
+                    workout: {
+                        ...state.messages.workout,
+                        stoppingDone: `Workout '${workout.name}' #${workout.id} stopped successfully`,
+                    },
+                },
+            };
+        }
+
+        case WorkoutActionTypes.DELETE_WORKOUT_FAILED: {
+            const { workout, error } = action.payload;
+
+            return {
+                ...state,
+                errors: {
+                    ...state.errors,
+                    workout: {
+                        ...state.errors.workout,
+                        deleting: {
+                            message:
+                                `Could not delete workout '${workout.name}' #${workout.id}`,
+                            reason: error.toString(),
+                        },
+                    },
+                },
+            };
+        }
+
+        case WorkoutActionTypes.DELETE_WORKOUT_SUCCESS: {
+            const { workout } = action.payload;
+
+            return {
+                ...state,
+                messages: {
+                    ...state.messages,
+                    workout: {
+                        ...state.messages.workout,
+                        deletingDone: `Workout '${workout.name}' #${workout.id} deleted successfully`,
+                    },
+                },
+            };
+        }
+
+        case WorkoutActionTypes.UPDATE_WORKOUT_FAILED: {
+            const { workout, error } = action.payload;
+
+            return {
+                ...state,
+                errors: {
+                    ...state.errors,
+                    workout: {
+                        ...state.errors.workout,
+                        updating: {
+                            message:
+                                `Could not update workout #${workout.id}`,
+                            reason: error.toString(),
+                        },
                     },
                 },
             };

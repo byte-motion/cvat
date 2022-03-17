@@ -24,6 +24,15 @@ export enum WorkoutActionTypes {
     GET_WORKOUT_METRICS = 'GET_WORKOUT_METRICS',
     GET_WORKOUT_METRICS_SUCCESS = 'GET_WORKOUT_METRICS_SUCCESS',
     GET_WORKOUT_METRICS_FAILED = 'GET_WORKOUT_METRICS_FAILED',
+    DELETE_WORKOUT = 'DELETE_WORKOUT',
+    DELETE_WORKOUT_SUCCESS = 'DELETE_WORKOUT_SUCCESS',
+    DELETE_WORKOUT_FAILED = 'DELETE_WORKOUT_FAILED',
+    STOP_WORKOUT_TRAINING = 'STOP_WORKOUT_TRAINING',
+    STOP_WORKOUT_TRAINING_SUCCESS = 'STOP_WORKOUT_TRAINING_SUCCESS',
+    STOP_WORKOUT_TRAINING_FAILED = 'STOP_WORKOUT_TRAINING_FAILED',
+    UPDATE_WORKOUT = 'UPDATE_WORKOUT',
+    UPDATE_WORKOUT_SUCCESS = 'UPDATE_WORKOUT_SUCCESS',
+    UPDATE_WORKOUT_FAILED = 'UPDATE_WORKOUT_FAILED',
 }
 
 export const workoutActions = {
@@ -60,6 +69,27 @@ export const workoutActions = {
     ),
     getWorkoutMetricsFailed: (error: any) => createAction(
         WorkoutActionTypes.GET_WORKOUT_METRICS_FAILED, { error },
+    ),
+    stopWorkoutTraining: () => createAction(WorkoutActionTypes.STOP_WORKOUT_TRAINING),
+    stopWorkoutTrainingSuccess: (workout: any) => (
+        createAction(WorkoutActionTypes.STOP_WORKOUT_TRAINING_SUCCESS, { workout })
+    ),
+    stopWorkoutTrainingFailed: (workout: any, error: any) => createAction(
+        WorkoutActionTypes.STOP_WORKOUT_TRAINING_FAILED, { workout, error },
+    ),
+    deleteWorkout: () => createAction(WorkoutActionTypes.DELETE_WORKOUT),
+    deleteWorkoutSuccess: (workout: any) => (
+        createAction(WorkoutActionTypes.DELETE_WORKOUT_SUCCESS, { workout })
+    ),
+    deleteWorkoutFailed: (workout: any, error: any) => createAction(
+        WorkoutActionTypes.DELETE_WORKOUT_FAILED, { workout, error },
+    ),
+    updateWorkout: () => createAction(WorkoutActionTypes.UPDATE_WORKOUT),
+    updateWorkoutSuccess: (workout: any) => (
+        createAction(WorkoutActionTypes.UPDATE_WORKOUT_SUCCESS, { workout })
+    ),
+    updateWorkoutFailed: (workout: any, error: any) => createAction(
+        WorkoutActionTypes.UPDATE_WORKOUT_FAILED, { workout, error },
     ),
 };
 
@@ -130,6 +160,55 @@ export function getWorkoutMetricsAsync(
             dispatch(workoutActions.getWorkoutMetricsSuccess(image));
         } catch (error) {
             dispatch(workoutActions.getWorkoutMetricsFailed(error));
+        }
+    };
+}
+
+export function stopWorkoutTrainingAsync(
+    workout: any,
+): ThunkAction {
+    return async (dispatch: ActionCreator<Dispatch>): Promise<void> => {
+        dispatch(workoutActions.stopWorkoutTraining());
+
+        try {
+            await cvat.aifred.stopTraining(workout.id);
+            dispatch(workoutActions.stopWorkoutTrainingSuccess(workout));
+        } catch (error) {
+            dispatch(workoutActions.stopWorkoutTrainingFailed(workout, error));
+        }
+    };
+}
+
+export function deleteWorkoutAsync(
+    workout: any,
+): ThunkAction {
+    return async (dispatch: ActionCreator<Dispatch>): Promise<void> => {
+        dispatch(workoutActions.deleteWorkout());
+
+        try {
+            await cvat.aifred.deleteWorkout(workout.id);
+            dispatch(workoutActions.deleteWorkoutSuccess(workout));
+        } catch (error) {
+            dispatch(workoutActions.deleteWorkoutFailed(workout, error));
+        }
+    };
+}
+
+export function updateWorkoutAsync(
+    workout: any,
+): ThunkAction {
+    return async (dispatch: ActionCreator<Dispatch>): Promise<void> => {
+        dispatch(workoutActions.updateWorkout());
+
+        const {
+            id, name, dtl, iterations,
+        } = workout;
+
+        try {
+            await cvat.aifred.updateWorkout(id, name, workout.data_url, dtl.id, iterations);
+            dispatch(workoutActions.updateWorkoutSuccess(workout));
+        } catch (error) {
+            dispatch(workoutActions.updateWorkoutFailed(workout, error));
         }
     };
 }

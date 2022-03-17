@@ -12,9 +12,6 @@ import Form from 'antd/lib/form';
 
 import { CombinedState } from 'reducers/interfaces';
 import { exportActions, exportModelAsync } from 'actions/export-ocellus-actions';
-// import getCore from 'cvat-core-wrapper';
-
-// const core = getCore();
 
 type FormValues = {
     fileName: string | undefined;
