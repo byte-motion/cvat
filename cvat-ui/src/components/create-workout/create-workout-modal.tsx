@@ -176,7 +176,7 @@ function CreateWorkoutModal(): JSX.Element {
                     <InputNumber
                         placeholder='Number of iterations'
                         className='cvat-modal-workout-iterations-input'
-                        min={1000}
+                        min={1001}
                         precision={0}
                     />
                 </Form.Item>

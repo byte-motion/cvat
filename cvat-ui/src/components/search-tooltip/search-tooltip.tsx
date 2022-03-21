@@ -135,7 +135,7 @@ export default function SearchTooltip(props: Props): JSX.Element {
                     {instance === 'workout' ? (
                         <Paragraph>
                             <Text strong>status: new</Text>
-                            <Text>new, running, stopped, failed or completed</Text>
+                            <Text>new, training, stopped, error or finished</Text>
                         </Paragraph>
                     ) : null}
                     {instance === 'workout' ? (

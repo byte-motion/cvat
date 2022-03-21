@@ -64,7 +64,7 @@ export default function ProgressBarComponent(props: Props): JSX.Element {
                     <Progress
                         className={`${progressColor} cvat-workout-progress`}
                         percent={workoutProgress * 100}
-                        strokeColor='#1890FF'
+                        strokeColor='#37cde6'
                         showInfo={false}
                         strokeWidth={5}
                         size='small'

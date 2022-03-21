@@ -366,17 +366,27 @@
     /**
      * Workout statuses
      * @enum {string}
-     * @name TaskStatus
+     * @name WorkoutStatus
      * @memberof module:API.cvat.enums
      * @property {string} NEW 'new'
-     * @property {string} PENDING 'pending'
-     * @property {string} COMPLETED 'completed'
+     * @property {string} STOPPED 'stopped'
+     * @property {string} FINISHED 'finished'
+     * @property {string} ERROR 'error'
+     * @property {string} QUEUED 'queued'
+     * @property {string} TRAINING 'training'
+     * @property {string} FETCHING 'fetching'
+     * @property {string} AUGMENTING 'augmenting'
      * @readonly
      */
     const WorkoutStatus = Object.freeze({
+        FINISHED: 'finished',
+        STOPPED: 'stopped',
         NEW: 'new',
-        PENDING: 'pending',
-        COMPLETED: 'completed',
+        ERROR: 'error',
+        QUEUED: 'queued',
+        TRAINING: 'training',
+        FETCHING: 'fetching',
+        AUGMENTING: 'augmenting',
     });
 
     module.exports = {

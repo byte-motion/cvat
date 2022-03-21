@@ -1,0 +1,44 @@
+$header-color: #323b44;
+$text-color: #e3e3e3;
+$text-color-secondary: rgba(255, 255, 255, 0.45);
+$completed-progress-color: #1abc9c;
+$inprogress-progress-color: #37cde6;
+$background-color-1: #323b44;
+$background-color-2: #38414a;
+$background-color-3: #36404a;
+$notification-border-color-1: #37cde6;
+$danger-icon-color: #f1556c;
+$ok-icon-color: #1abc9c;
+$info-icon-color: #37cde6;
+$slider-color: #37cde6;
+
+$monospaced-fonts-stack: Roboto Mono, Consolas, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono,
+    Courier New, monospace;
+
+
+.ant-layout-content {
+    background-color: $background-color-3;
+}
+
+.cvat-search-field {
+    background-color: $background-color-1;
+}
+
+.ant-btn-primary {
+    background-color: $inprogress-progress-color;
+}
+
+.ant-pagination-item-active, .ant-btn-background-ghost.ant-btn-primary {
+    color: $inprogress-progress-color;
+    border-color: $inprogress-progress-color;
+}
+
+.ant-pagination-item-active a, .ant-typography-edit, .ant-btn-link, .ant-typography a {
+    color: $inprogress-progress-color;
+}
+
+.cvat-annotation-header svg,
+.cvat-objects-sidebar-tabs svg,
+.cvat-canvas-controls-sidebar svg {
+    filter: invert(0.8);
+}

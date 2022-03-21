@@ -38,7 +38,7 @@ const defaultState: SettingsState = {
         },
     },
     player: {
-        canvasBackgroundColor: '#ffffff',
+        canvasBackgroundColor: '#323b44',
         frameStep: 10,
         frameSpeed: FrameSpeed.Usual,
         resetZoom: false,
