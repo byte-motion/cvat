@@ -11,7 +11,7 @@ import Text from 'antd/lib/typography/Text';
 import Select, { SelectValue } from 'antd/lib/select';
 import Input from 'antd/lib/input';
 import Form from 'antd/lib/form';
-import { InputNumber } from 'antd';
+import { Tooltip, InputNumber } from 'antd';
 
 import { CombinedState } from 'reducers/interfaces';
 import { workoutActions, createWorkoutAsync } from 'actions/workouts-actions';
@@ -153,7 +153,9 @@ function CreateWorkoutModal(): JSX.Element {
                                         className='cvat-modal-workout-option-item'
                                     >
                                         <RetweetOutlined />
-                                        <Text>{dtl.name}</Text>
+                                        <Tooltip title={dtl.description} placement='right'>
+                                            <Text>{dtl.name}</Text>
+                                        </Tooltip>
                                     </Select.Option>
                                 ),
                             )}
