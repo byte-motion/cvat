@@ -6,24 +6,11 @@ import './styles.scss';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
-// import { useHistory, useParams, useLocation } from 'react-router';
 import Spin from 'antd/lib/spin';
 import { Row, Col } from 'antd/lib/grid';
 import Result from 'antd/lib/result';
-// import Button from 'antd/lib/button';
-// import Title from 'antd/lib/typography/Title';
-// import Pagination from 'antd/lib/pagination';
-// import { PlusOutlined } from '@ant-design/icons';
 
 import { CombinedState } from 'reducers/interfaces';
-// import { getWorkoutsAsync } from 'actions/workouts-actions';
-// import { cancelInferenceAsync } from 'actions/models-actions';
-// import TaskItem from 'components/tasks-page/task-item';
-// import SearchField from 'components/search-field/search-field';
-// import MoveTaskModal from 'components/move-task-modal/move-task-modal';
-// import ModelRunnerDialog from 'components/model-runner-modal/model-runner-dialog';
-// import ImportDatasetModal from 'components/import-dataset-modal/import-dataset-modal';
-// import { useDidUpdateEffect } from 'utils/hooks';
 import { getWorkoutAsync } from 'actions/workout-actions';
 import DetailsComponent from './details';
 import WorkoutTopBar from './top-bar';
@@ -38,7 +25,6 @@ export default function WorkoutPageComponent(): JSX.Element {
     const id = +useParams<ParamType>().id;
     const dispatch = useDispatch();
 
-    // const history = useHistory();
     const workout = useSelector((state: CombinedState) => state.workout.current?.instance);
     const workoutFetching = useSelector((state: CombinedState) => state.workout.fetching);
 
@@ -47,55 +33,6 @@ export default function WorkoutPageComponent(): JSX.Element {
             getWorkoutAsync(id),
         );
     }, [id, dispatch]);
-
-    // const deletes = useSelector((state: CombinedState) => state.workouts.activities.deletes);
-    // const taskDeletes = useSelector((state: CombinedState) => state.tasks.activities.deletes);
-    // const tasksActiveInferences = useSelector((state: CombinedState) => state.models.inferences);
-    // const tasks = useSelector((state: CombinedState) => state.tasks.current);
-    // const tasksCount = useSelector((state: CombinedState) => state.tasks.count);
-    // const tasksGettingQuery = useSelector((state: CombinedState) => state.workouts.tasksGettingQuery);
-
-    // const workoutSubsets: Array<string> = [];
-    // for (const task of tasks) {
-    //     if (!workoutSubsets.includes(task.instance.subset)) workoutSubsets.push(task.instance.subset);
-    // }
-
-    // const deleteActivity = workout && id in deletes ? deletes[id] : null;
-
-    // const onPageChange = useCallback(
-    //     (p: number) => {
-    //         dispatch(getWorkoutTasksAsync({
-    //             workoutId: id,
-    //             page: p,
-    //         }));
-    //     },
-    //     [],
-    // );
-
-    // useEffect(() => {
-    //     const searchParams: Partial<TasksQuery> = {};
-    //     for (const [param, value] of new URLSearchParams(search)) {
-    //         searchParams[param] = ['page'].includes(param) ? Number.parseInt(value, 10) : value;
-    //     }
-    //     dispatch(getWorkoutsAsync({ id }, searchParams));
-    // }, []);
-
-    // useDidUpdateEffect(() => {
-    //     const searchParams = new URLSearchParams();
-    //     for (const [name, value] of Object.entries(tasksGettingQuery)) {
-    //         if (value !== null && typeof value !== 'undefined' && !['workoutId', 'ordering'].includes(name)) {
-    //             searchParams.append(name, value.toString());
-    //         }
-    //     }
-    //     history.push({
-    //         pathname: `/workouts/${id}`,
-    //         search: `?${searchParams.toString()}`,
-    //     });
-    // }, [tasksGettingQuery, id]);
-
-    // if (deleteActivity) {
-    //     history.push('/workouts');
-    // }
 
     if (workoutFetching) {
         return <Spin size='large' className='cvat-spinner' />;
@@ -111,13 +48,6 @@ export default function WorkoutPageComponent(): JSX.Element {
             />
         );
     }
-
-    // const paginationDimensions = {
-    //     md: 22,
-    //     lg: 18,
-    //     xl: 16,
-    //     xxl: 16,
-    // };
 
     return (
         <Row justify='center' align='top' className='cvat-workout-page'>

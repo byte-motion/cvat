@@ -25,14 +25,11 @@ export default (state: OcellusExportState = defaultState, action: ExportActions)
                 modalVisible: false,
                 workout: null,
             };
-        case ExportActionTypes.EXPORT_OCELLUS_MODEL: {
-            // const { workout, fileName } = action.payload;
-
+        case ExportActionTypes.EXPORT_OCELLUS_MODEL:
             return {
                 ...state,
                 ...action.payload,
             };
-        }
         case ExportActionTypes.EXPORT_OCELLUS_MODEL_FAILED:
         case ExportActionTypes.EXPORT_OCELLUS_MODEL_SUCCESS: {
             return {

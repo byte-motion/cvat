@@ -123,16 +123,7 @@ class WorkoutItemComponent extends React.PureComponent<Props & RouteComponentPro
     public render(): JSX.Element {
         const { workoutInstance } = this.props;
         const { instance } = workoutInstance;
-        // const { deleted, hidden } = this.props;
         const style = {};
-        // if (deleted) {
-        //     (style as any).pointerEvents = 'none';
-        //     (style as any).opacity = 0.5;
-        // }
-
-        // if (hidden) {
-        //     (style as any).display = 'none';
-        // }
 
         return (
             <Row className='cvat-tasks-list-item' justify='center' align='top' style={{ ...style }}>
