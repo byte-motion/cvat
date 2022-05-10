@@ -12,6 +12,19 @@ interface Props {
     span: number;
 }
 
+const ProgressColor = (status: any): string => {
+    if (status === WorkoutStatus.FINISHED) {
+        return 'cvat-workout-completed-progress';
+    }
+    if (status === WorkoutStatus.ERROR) {
+        return 'cvat-workout-error-progress';
+    }
+    if ([WorkoutStatus.STOPPED, WorkoutStatus.QUEUED, WorkoutStatus.NEW].includes(status)) {
+        return 'cvat-workout-pending-progress';
+    }
+    return 'cvat-workout-progress-progress';
+};
+
 export default function ProgressBarComponent(props: Props): JSX.Element {
     const { workout, span } = props;
     const { status } = workout;
@@ -27,19 +40,8 @@ export default function ProgressBarComponent(props: Props): JSX.Element {
     const numOfCompleted = workout.iteration;
     const timeLeft = (workout.eta < 0) ? 'N/A' : formatSeconds(workout.eta);
 
-    let progressColor = null;
-    if (status === WorkoutStatus.FINISHED) {
-        progressColor = 'cvat-workout-completed-progress';
-    } else if (status === WorkoutStatus.ERROR) {
-        progressColor = 'cvat-workout-error-progress';
-    } else if ([WorkoutStatus.STOPPED, WorkoutStatus.QUEUED, WorkoutStatus.NEW].includes(status)) {
-        progressColor = 'cvat-workout-pending-progress';
-    } else {
-        progressColor = 'cvat-workout-progress-progress';
-    }
-
     const progressText = (
-        <Text strong className={progressColor}>
+        <Text strong className={ProgressColor(status)}>
             {status}
         </Text>
     );
@@ -50,7 +52,7 @@ export default function ProgressBarComponent(props: Props): JSX.Element {
         <Col span={span}>
             <Row justify='space-between' align='top'>
                 <Col>
-                    <svg height='8' width='8' className={progressColor}>
+                    <svg height='8' width='8' className={ProgressColor(status)}>
                         <circle cx='4' cy='4' r='4' strokeWidth='0' />
                     </svg>
                     {progressText}
@@ -62,7 +64,7 @@ export default function ProgressBarComponent(props: Props): JSX.Element {
             <Row>
                 <Col span={24}>
                     <Progress
-                        className={`${progressColor} cvat-workout-progress`}
+                        className={`${ProgressColor(status)} cvat-workout-progress`}
                         percent={workoutProgress * 100}
                         strokeColor='#37cde6'
                         showInfo={false}

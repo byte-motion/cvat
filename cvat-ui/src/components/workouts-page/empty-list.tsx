@@ -12,8 +12,7 @@ interface Props {
     notFound?: boolean;
 }
 
-export default function EmptyListComponent(props: Props): JSX.Element {
-    const { notFound } = props;
+export default function EmptyListComponent({ notFound }: Props): JSX.Element {
     return (
         <div className='cvat-empty-workouts-list'>
             <Row justify='center' align='middle'>

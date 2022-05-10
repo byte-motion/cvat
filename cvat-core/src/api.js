@@ -934,8 +934,7 @@ function build() {
              * @throws {module:API.cvat.exceptions.ServerError}
              */
             async getWorkout(workoutId) {
-                const result = await PluginRegistry.apiWrapper(cvat.aifred.getWorkout, workoutId);
-                return result;
+                return PluginRegistry.apiWrapper(cvat.aifred.getWorkout, workoutId);
             },
             /**
              * Method returns workout by its ID
@@ -950,10 +949,9 @@ function build() {
              * @throws {module:API.cvat.exceptions.ServerError}
              */
             async getWorkoutImage(workoutId, fileType, fileName) {
-                const result = await PluginRegistry.apiWrapper(
+                return PluginRegistry.apiWrapper(
                     cvat.aifred.getWorkoutImage, workoutId, fileType, fileName,
                 );
-                return result;
             },
             /**
              * Method returns workout metrics by its ID
@@ -966,10 +964,9 @@ function build() {
              * @throws {module:API.cvat.exceptions.ServerError}
              */
             async getWorkoutMetrics(workoutId) {
-                const result = await PluginRegistry.apiWrapper(
+                return PluginRegistry.apiWrapper(
                     cvat.aifred.getWorkoutMetrics, workoutId,
                 );
-                return result;
             },
             /**
              * Method returns workout ocellus model URL
@@ -983,10 +980,9 @@ function build() {
              * @throws {module:API.cvat.exceptions.ServerError}
              */
             async getOcellusModel(workoutId, fileName) {
-                const result = await PluginRegistry.apiWrapper(
+                return PluginRegistry.apiWrapper(
                     cvat.aifred.getOcellusModel, workoutId, fileName,
                 );
-                return result;
             },
             /**
              * Method stops running training in workout session
@@ -999,10 +995,9 @@ function build() {
              * @throws {module:API.cvat.exceptions.ServerError}
              */
             async stopTraining(workoutId) {
-                const result = await PluginRegistry.apiWrapper(
+                return PluginRegistry.apiWrapper(
                     cvat.aifred.stopTraining, workoutId,
                 );
-                return result;
             },
             /**
              * Method deletes workout and stop workout session if running
@@ -1015,10 +1010,9 @@ function build() {
              * @throws {module:API.cvat.exceptions.ServerError}
              */
             async deleteWorkout(workoutId) {
-                const result = await PluginRegistry.apiWrapper(
+                return PluginRegistry.apiWrapper(
                     cvat.aifred.deleteWorkout, workoutId,
                 );
-                return result;
             },
             /**
              * Method updates workout and returns information about it
@@ -1035,9 +1029,8 @@ function build() {
              * @throws {module:API.cvat.exceptions.ServerError}
              */
             async updateWorkout(workoutId, name, instance, dtlId, iterations) {
-                const result = await PluginRegistry.apiWrapper(cvat.aifred.updateWorkout, workoutId, name, instance,
+                return PluginRegistry.apiWrapper(cvat.aifred.updateWorkout, workoutId, name, instance,
                     dtlId, iterations);
-                return result;
             },
         },
         /**

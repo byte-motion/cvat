@@ -252,22 +252,20 @@
             async function signing(url) {
                 const { backendAPI, proxy } = config;
 
-                let response = null;
                 try {
                     const data = JSON.stringify({
                         url: `${backendAPI}${url}`,
                     });
-                    response = await Axios.post(`${backendAPI}/auth/signing`, data, {
+                    const response = await Axios.post(`${backendAPI}/auth/signing`, data, {
                         proxy,
                         headers: {
                             'Content-Type': 'application/json',
                         },
                     });
+                    return response.data;
                 } catch (errorData) {
                     throw generateError(errorData);
                 }
-
-                return response.data;
             }
 
             async function logout() {

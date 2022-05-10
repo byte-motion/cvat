@@ -320,35 +320,20 @@
             return cloudStorages;
         };
 
-        cvat.aifred.login.implementation = async (url) => {
-            await aifredProxy.login(url);
-        };
+        cvat.aifred.login.implementation = (url) => aifredProxy.login(url);
 
-        cvat.aifred.workspaces.implementation = async () => {
-            const result = await aifredProxy.workspaces();
-            return result;
-        };
+        cvat.aifred.workspaces.implementation = () => aifredProxy.workspaces();
 
-        cvat.aifred.dtls.implementation = async (workspaceId) => {
-            const result = await aifredProxy.dtls(workspaceId);
-            return result;
-        };
+        cvat.aifred.dtls.implementation = (workspaceId) => aifredProxy.dtls(workspaceId);
 
         cvat.aifred.createWorkout
-            .implementation = async (name, instance, workspaceId, dtlId, iterations) => {
-                const result = await aifredProxy.createWorkout(name, instance, workspaceId, dtlId, iterations);
-                return result;
+            .implementation = (name, instance, workspaceId, dtlId, iterations) => {
+                aifredProxy.createWorkout(name, instance, workspaceId, dtlId, iterations);
             };
 
-        cvat.aifred.getSelf.implementation = async () => {
-            const result = await aifredProxy.getSelf();
-            return result;
-        };
+        cvat.aifred.getSelf.implementation = () => aifredProxy.getSelf();
 
-        cvat.aifred.authorized.implementation = async () => {
-            const result = await aifredProxy.authorized();
-            return result;
-        };
+        cvat.aifred.authorized.implementation = () => aifredProxy.authorized();
 
         const getWorkoutPreview = async (workout) => {
             const url = new URL(workout.data_url);
@@ -425,34 +410,22 @@
             };
         };
 
-        cvat.aifred.getWorkoutImage.implementation = async (workoutId, fileType, fileName) => {
-            const image = await aifredProxy.getWorkoutImage(workoutId, fileType, fileName);
-            return image;
+        cvat.aifred.getWorkoutImage.implementation = (workoutId, fileType, fileName) => {
+            aifredProxy.getWorkoutImage(workoutId, fileType, fileName);
         };
 
-        cvat.aifred.getWorkoutMetrics.implementation = async (workoutId) => {
-            const image = await aifredProxy.getWorkoutMetrics(workoutId);
-            return image;
+        cvat.aifred.getWorkoutMetrics.implementation = (workoutId) => aifredProxy.getWorkoutMetrics(workoutId);
+
+        cvat.aifred.getOcellusModel.implementation = (workoutId, fileName) => {
+            aifredProxy.getOcellusModel(workoutId, fileName);
         };
 
-        cvat.aifred.getOcellusModel.implementation = async (workoutId, fileName) => {
-            const model = await aifredProxy.getOcellusModel(workoutId, fileName);
-            return model;
-        };
+        cvat.aifred.stopTraining.implementation = (workoutId) => aifredProxy.stopTraining(workoutId);
 
-        cvat.aifred.stopTraining.implementation = async (workoutId) => {
-            const model = await aifredProxy.stopTraining(workoutId);
-            return model;
-        };
+        cvat.aifred.deleteWorkout.implementation = (workoutId) => aifredProxy.deleteWorkout(workoutId);
 
-        cvat.aifred.deleteWorkout.implementation = async (workoutId) => {
-            const model = await aifredProxy.deleteWorkout(workoutId);
-            return model;
-        };
-
-        cvat.aifred.updateWorkout.implementation = async (workoutId, name, instance, dtlId, iterations) => {
-            const result = await aifredProxy.updateWorkout(workoutId, name, instance, dtlId, iterations);
-            return result;
+        cvat.aifred.updateWorkout.implementation = (workoutId, name, instance, dtlId, iterations) => {
+            aifredProxy.updateWorkout(workoutId, name, instance, dtlId, iterations);
         };
 
         return cvat;

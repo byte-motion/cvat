@@ -10,6 +10,13 @@ import { getWorkoutsAsync } from 'actions/workouts-actions';
 import { CombinedState, Workout } from 'reducers/interfaces';
 import WorkoutItem from './workout-item';
 
+const dimensions = {
+    md: 22,
+    lg: 18,
+    xl: 16,
+    xxl: 16,
+};
+
 export default function WorkoutListComponent(): JSX.Element {
     const dispatch = useDispatch();
     const workoutsCount = useSelector((state: CombinedState) => state.workouts.count);
@@ -25,13 +32,6 @@ export default function WorkoutListComponent(): JSX.Element {
             }),
         );
     }, [dispatch, getWorkoutsAsync, gettingQuery]);
-
-    const dimensions = {
-        md: 22,
-        lg: 18,
-        xl: 16,
-        xxl: 16,
-    };
 
     return (
         <>

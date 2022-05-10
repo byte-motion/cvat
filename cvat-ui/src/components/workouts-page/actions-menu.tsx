@@ -68,20 +68,21 @@ export default function WorkoutActionsMenuComponent(props: Props): JSX.Element {
 
     const menuItems: JSX.Element[] = [];
 
-    if (workoutInstance.status === WorkoutStatus.TRAINING) {
-        menuItems.push(
+    switch (workoutInstance.status) {
+        case WorkoutStatus.TRAINING: menuItems.push(
             <Menu.Item key='stop-workout-training' onClick={onStopWorkout}>
                 Stop workout
             </Menu.Item>,
         );
-    }
+            break;
 
-    if (workoutInstance.status === WorkoutStatus.FINISHED) {
-        menuItems.push(
+        case WorkoutStatus.FINISHED: menuItems.push(
             <Menu.Item key='export-ocellus-model' onClick={() => { dispatch(exportActions.openExportModal(workoutInstance)); }}>
                 Export to Ocellus
             </Menu.Item>,
         );
+            break;
+        default:
     }
 
     return (

@@ -22,9 +22,9 @@ import { useHistory } from 'react-router';
 const core = getCore();
 
 type FormValues = {
-    selectedWorkspace: number | undefined;
-    selectedDTL: number | undefined;
-    workoutName: string | undefined;
+    selectedWorkspace?: number;
+    selectedDTL?: number;
+    workoutName?: string;
     iterations: number;
 };
 

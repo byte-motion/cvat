@@ -11,15 +11,16 @@ import SearchField from 'components/search-field/search-field';
 import { CombinedState, WorkoutsQuery } from 'reducers/interfaces';
 import { getWorkoutsAsync } from 'actions/workouts-actions';
 
+const dimensions = {
+    md: 11,
+    lg: 9,
+    xl: 8,
+    xxl: 8,
+};
+
 export default function TopBarComponent(): JSX.Element {
     const dispatch = useDispatch();
     const query = useSelector((state: CombinedState) => state.workouts.gettingQuery);
-    const dimensions = {
-        md: 11,
-        lg: 9,
-        xl: 8,
-        xxl: 8,
-    };
 
     return (
         <Row justify='center' align='middle' className='cvat-workouts-top-bar'>

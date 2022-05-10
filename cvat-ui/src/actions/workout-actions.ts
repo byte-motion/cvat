@@ -5,7 +5,6 @@ import { ActionUnion, createAction, ThunkAction } from 'utils/redux';
 import { ActionCreator, Dispatch } from 'redux';
 
 import getCore from 'cvat-core-wrapper';
-// import { Workout } from 'reducers/interfaces';
 
 const cvat = getCore();
 
@@ -113,104 +112,92 @@ export const createWorkoutAsync = (
     }
 };
 
-export function getWorkoutAsync(
+export const getWorkoutAsync = (
     id: number,
-): ThunkAction {
-    return async (dispatch: ActionCreator<Dispatch>): Promise<void> => {
-        dispatch(workoutActions.getWorkout());
+): ThunkAction => async (dispatch: ActionCreator<Dispatch>): Promise<void> => {
+    dispatch(workoutActions.getWorkout());
 
-        try {
-            const result = await cvat.aifred.getWorkout(id);
-            dispatch(workoutActions.getWorkoutSuccess(result));
-        } catch (error) {
-            dispatch(workoutActions.getWorkoutFailed(error));
-        }
-    };
-}
+    try {
+        const result = await cvat.aifred.getWorkout(id);
+        dispatch(workoutActions.getWorkoutSuccess(result));
+    } catch (error) {
+        dispatch(workoutActions.getWorkoutFailed(error));
+    }
+};
 
-export function getWorkoutValidationsAsync(
+export const getWorkoutValidationsAsync = (
     workout: any,
-): ThunkAction {
-    return async (dispatch: ActionCreator<Dispatch>): Promise<void> => {
-        dispatch(workoutActions.getWorkoutValidations());
+): ThunkAction => async (dispatch: ActionCreator<Dispatch>): Promise<void> => {
+    dispatch(workoutActions.getWorkoutValidations());
 
-        try {
-            const images = workout.validations.map(async (name: string) => {
-                const image = await cvat.aifred.getWorkoutImage(workout.id, 'validations', name);
-                return { name, image };
-            });
+    try {
+        const images = workout.validations.map(async (name: string) => {
+            const image = await cvat.aifred.getWorkoutImage(workout.id, 'validations', name);
+            return { name, image };
+        });
 
-            const result = await Promise.all(images);
+        const result = await Promise.all(images);
 
-            dispatch(workoutActions.getWorkoutValidationsSuccess(result));
-        } catch (error) {
-            dispatch(workoutActions.getWorkoutValidationsFailed(error));
-        }
-    };
-}
+        dispatch(workoutActions.getWorkoutValidationsSuccess(result));
+    } catch (error) {
+        dispatch(workoutActions.getWorkoutValidationsFailed(error));
+    }
+};
 
-export function getWorkoutMetricsAsync(
+export const getWorkoutMetricsAsync = (
     workout: any,
-): ThunkAction {
-    return async (dispatch: ActionCreator<Dispatch>): Promise<void> => {
-        dispatch(workoutActions.getWorkoutMetrics());
+): ThunkAction => async (dispatch: ActionCreator<Dispatch>): Promise<void> => {
+    dispatch(workoutActions.getWorkoutMetrics());
 
-        try {
-            const image = await cvat.aifred.getWorkoutMetrics(workout.id);
-            dispatch(workoutActions.getWorkoutMetricsSuccess(image));
-        } catch (error) {
-            dispatch(workoutActions.getWorkoutMetricsFailed(error));
-        }
-    };
-}
+    try {
+        const image = await cvat.aifred.getWorkoutMetrics(workout.id);
+        dispatch(workoutActions.getWorkoutMetricsSuccess(image));
+    } catch (error) {
+        dispatch(workoutActions.getWorkoutMetricsFailed(error));
+    }
+};
 
-export function stopWorkoutTrainingAsync(
+export const stopWorkoutTrainingAsync = (
     workout: any,
-): ThunkAction {
-    return async (dispatch: ActionCreator<Dispatch>): Promise<void> => {
-        dispatch(workoutActions.stopWorkoutTraining());
+): ThunkAction => async (dispatch: ActionCreator<Dispatch>): Promise<void> => {
+    dispatch(workoutActions.stopWorkoutTraining());
 
-        try {
-            await cvat.aifred.stopTraining(workout.id);
-            dispatch(workoutActions.stopWorkoutTrainingSuccess(workout));
-        } catch (error) {
-            dispatch(workoutActions.stopWorkoutTrainingFailed(workout, error));
-        }
-    };
-}
+    try {
+        await cvat.aifred.stopTraining(workout.id);
+        dispatch(workoutActions.stopWorkoutTrainingSuccess(workout));
+    } catch (error) {
+        dispatch(workoutActions.stopWorkoutTrainingFailed(workout, error));
+    }
+};
 
-export function deleteWorkoutAsync(
+export const deleteWorkoutAsync = (
     workout: any,
-): ThunkAction {
-    return async (dispatch: ActionCreator<Dispatch>): Promise<void> => {
-        dispatch(workoutActions.deleteWorkout());
+): ThunkAction => async (dispatch: ActionCreator<Dispatch>): Promise<void> => {
+    dispatch(workoutActions.deleteWorkout());
 
-        try {
-            await cvat.aifred.deleteWorkout(workout.id);
-            dispatch(workoutActions.deleteWorkoutSuccess(workout));
-        } catch (error) {
-            dispatch(workoutActions.deleteWorkoutFailed(workout, error));
-        }
-    };
-}
+    try {
+        await cvat.aifred.deleteWorkout(workout.id);
+        dispatch(workoutActions.deleteWorkoutSuccess(workout));
+    } catch (error) {
+        dispatch(workoutActions.deleteWorkoutFailed(workout, error));
+    }
+};
 
-export function updateWorkoutAsync(
+export const updateWorkoutAsync = (
     workout: any,
-): ThunkAction {
-    return async (dispatch: ActionCreator<Dispatch>): Promise<void> => {
-        dispatch(workoutActions.updateWorkout());
+): ThunkAction => async (dispatch: ActionCreator<Dispatch>): Promise<void> => {
+    dispatch(workoutActions.updateWorkout());
 
-        const {
-            id, name, dtl, iterations,
-        } = workout;
+    const {
+        id, name, dtl, iterations,
+    } = workout;
 
-        try {
-            await cvat.aifred.updateWorkout(id, name, workout.data_url, dtl.id, iterations);
-            dispatch(workoutActions.updateWorkoutSuccess(workout));
-        } catch (error) {
-            dispatch(workoutActions.updateWorkoutFailed(workout, error));
-        }
-    };
-}
+    try {
+        await cvat.aifred.updateWorkout(id, name, workout.data_url, dtl.id, iterations);
+        dispatch(workoutActions.updateWorkoutSuccess(workout));
+    } catch (error) {
+        dispatch(workoutActions.updateWorkoutFailed(workout, error));
+    }
+};
 
 export type WorkoutActions = ActionUnion<typeof workoutActions>;

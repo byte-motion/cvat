@@ -24,17 +24,12 @@ const workspacesActions = {
 
 export type AIfredWorkspacesActions = ActionUnion<typeof workspacesActions>;
 
-export function getAIfredWorkspacesAsync(): ThunkAction {
-    return async (dispatch): Promise<void> => {
-        dispatch(workspacesActions.getWorkspaces());
-        let workspaces = null;
-
-        try {
-            workspaces = await cvat.aifred.workspaces();
-
-            dispatch(workspacesActions.getWorkspacesSuccess(workspaces));
-        } catch (error) {
-            dispatch(workspacesActions.getWorkspacesFailed(error));
-        }
-    };
-}
+export const getAIfredWorkspacesAsync = (): ThunkAction => async (dispatch): Promise<void> => {
+    dispatch(workspacesActions.getWorkspaces());
+    try {
+        const workspaces = await cvat.aifred.workspaces();
+        dispatch(workspacesActions.getWorkspacesSuccess(workspaces));
+    } catch (error) {
+        dispatch(workspacesActions.getWorkspacesFailed(error));
+    }
+};
