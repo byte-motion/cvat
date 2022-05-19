@@ -7,6 +7,7 @@ import Title from 'antd/lib/typography/Title';
 import { useDispatch, useSelector } from 'react-redux';
 import Spin from 'antd/lib/spin';
 
+import Text from 'antd/lib/typography/Text';
 import { getWorkoutValidationsAsync } from 'actions/workout-actions';
 import { CombinedState, WorkoutValidation } from 'reducers/interfaces';
 import EmptyListComponent from './empty-list';
@@ -37,9 +38,10 @@ export default function ValidationsComponent(props: ValidationsComponentProps): 
                 Model Validations
             </Title>
             {imagesFetching ? <Spin key={workout.id} size='large' className='cvat-spinner' /> : images.map(
-                (item: WorkoutValidation): JSX.Element => (
+                (item: WorkoutValidation, idx: number): JSX.Element => (
                     <div key={item.name} className='cvat-workout-image-container'>
-                        <img key={item.name} alt={item.name} className='cvat-task-item-preview' src={item.image} />
+                        <Text strong>{`#${idx + 1}:`}</Text>
+                        <img key={item.name} alt={item.name} className='cvat-workout-validation-preview' src={item.image} />
                     </div>
                 ),
             )}

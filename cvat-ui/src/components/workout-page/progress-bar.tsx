@@ -39,6 +39,7 @@ export default function ProgressBarComponent(props: Props): JSX.Element {
     const numOfIterations = workout.iterations;
     const numOfCompleted = workout.iteration;
     const timeLeft = (workout.eta < 0) ? 'N/A' : formatSeconds(workout.eta);
+    const showETA = !(workout.eta === 0); // don't show ETA for finished workout
 
     const progressText = (
         <Text strong className={ProgressColor(status)}>
@@ -75,7 +76,7 @@ export default function ProgressBarComponent(props: Props): JSX.Element {
             </Row>
             <Row justify='space-between' align='top'>
                 <Col span={24}>
-                    <Text type='secondary'>{`ETA: ${timeLeft}`}</Text>
+                    <Text type='secondary'>{showETA && `ETA: ${timeLeft}`}</Text>
                 </Col>
             </Row>
         </Col>

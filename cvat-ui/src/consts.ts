@@ -9,7 +9,7 @@ const LICENSE_URL = 'https://github.com/openvinotoolkit/cvat/blob/develop/LICENS
 const GITTER_URL = 'https://gitter.im/opencv-cvat';
 const GITTER_PUBLIC_URL = 'https://gitter.im/opencv-cvat/public';
 const FORUM_URL = 'https://software.intel.com/en-us/forums/intel-distribution-of-openvino-toolkit';
-const GITHUB_URL = 'https://github.com/openvinotoolkit/cvat';
+const GITHUB_URL = 'https://github.com/byte-motion/cvat';
 const GITHUB_IMAGE_URL =
     'https://github.com/openvinotoolkit/cvat/raw/develop/site/content/en/images/cvat.jpg';
 const SHARE_MOUNT_GUIDE_URL =

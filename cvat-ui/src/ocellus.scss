@@ -37,8 +37,33 @@ $monospaced-fonts-stack: Roboto Mono, Consolas, Monaco, Lucida Console, Liberati
     color: $inprogress-progress-color;
 }
 
+
+.cvat-workout-top-bar-actions .cvat-menu-icon svg,
+.cvat-task-top-bar .cvat-menu-icon svg,
 .cvat-annotation-header svg,
 .cvat-objects-sidebar-tabs svg,
-.cvat-canvas-controls-sidebar svg {
+.cvat-canvas-controls-sidebar svg,
+.cvat-header-account-icon svg,
+.cvat-item-open-task-actions svg {
     filter: invert(0.8);
+}
+
+.cvat-item-open-task-actions svg:hover {
+    cursor: pointer;
+}
+
+.cvat-active-header-button {
+    font-weight: bold;
+}
+
+.anticon.cvat-header-account-icon {
+    > svg {
+        transform: scale(0.7);
+    }
+}
+
+.anticon.anticon-question-circle {
+    > svg {
+        transform: scale(1.5);
+    }
 }

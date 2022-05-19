@@ -6,6 +6,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 import moment from 'moment';
+import { Table } from 'antd';
 import { Row, Col } from 'antd/lib/grid';
 import Title from 'antd/lib/typography/Title';
 import Button from 'antd/lib/button';
@@ -34,20 +35,41 @@ export default function DetailsComponent(props: DetailsComponentProps): JSX.Elem
         </div>
     );
 
+    const histogramColumns = [
+        {
+            title: 'Name',
+            dataIndex: 'name',
+            key: 'name',
+        },
+        {
+            title: 'Number of instances',
+            dataIndex: 'instances',
+            key: 'instances',
+        },
+        {
+            title: '%',
+            dataIndex: 'percent',
+            key: 'percent',
+        },
+    ];
+
+    const histogramData = (Object.keys(workout.histogram).length > 0) ? workout.histogram?.classes.map(
+        (item: any): { key: string, name: string; instances: number; percent: number; } => (
+            {
+                ...item,
+                percent: Math.round((item.instances / workout.histogram.total) * 100),
+                key: item.name,
+            }
+        ),
+    ) : null;
+
     const histogram = (
         <Row justify='space-between' className='cvat-workout-classes'>
 
-            {(Object.keys(workout.histogram).length > 0) && (
+            {(histogramData !== null) && (
                 <Col span={24}>
                     <Text strong>Classes:</Text>
-                    <ul>
-                        {workout.histogram.classes.map((item: any): JSX.Element => (
-                            <li key={item.name}>
-                                {`${item.name}: ${item.instances} `}
-                                {`(${Math.round((item.instances / workout.histogram.total) * 100)} %)`}
-                            </li>
-                        ))}
-                    </ul>
+                    <Table columns={histogramColumns} dataSource={histogramData} />
                 </Col>
             )}
         </Row>

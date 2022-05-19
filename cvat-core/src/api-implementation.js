@@ -326,10 +326,10 @@
 
         cvat.aifred.dtls.implementation = (workspaceId) => aifredProxy.dtls(workspaceId);
 
-        cvat.aifred.createWorkout
-            .implementation = (name, instance, workspaceId, dtlId, iterations) => {
-                aifredProxy.createWorkout(name, instance, workspaceId, dtlId, iterations);
-            };
+        cvat.aifred.createWorkout.implementation =
+            (name, instance, workspaceId, dtlId, iterations) => (
+                aifredProxy.createWorkout(name, instance, workspaceId, dtlId, iterations)
+            );
 
         cvat.aifred.getSelf.implementation = () => aifredProxy.getSelf();
 
@@ -410,9 +410,8 @@
             };
         };
 
-        cvat.aifred.getWorkoutImage.implementation = (workoutId, fileType, fileName) => {
-            aifredProxy.getWorkoutImage(workoutId, fileType, fileName);
-        };
+        cvat.aifred.getWorkoutImage.implementation =
+            (workoutId, fileType, fileName) => aifredProxy.getWorkoutImage(workoutId, fileType, fileName);
 
         cvat.aifred.getWorkoutMetrics.implementation = (workoutId) => aifredProxy.getWorkoutMetrics(workoutId);
 
