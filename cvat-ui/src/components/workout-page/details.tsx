@@ -53,15 +53,16 @@ export default function DetailsComponent(props: DetailsComponentProps): JSX.Elem
         },
     ];
 
-    const histogramData = (Object.keys(workout.histogram).length > 0) ? workout.histogram?.classes.map(
-        (item: any): { key: string, name: string; instances: number; percent: number; } => (
-            {
-                ...item,
-                percent: Math.round((item.instances / workout.histogram.total) * 100),
-                key: item.name,
-            }
-        ),
-    ) : null;
+    const histogramData = Object.keys(workout.histogram).length > 0 ?
+        workout.histogram.classes.map(
+            (item: any): { key: string, name: string; instances: number; percent: number; } => (
+                {
+                    ...item,
+                    percent: Math.round((item.instances / workout.histogram.total) * 100),
+                    key: item.name,
+                }
+            ),
+        ) : null;
 
     const histogram = (
         <Row justify='space-between' className='cvat-workout-classes'>
