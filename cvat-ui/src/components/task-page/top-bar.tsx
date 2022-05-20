@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Intel Corporation
+// Copyright (C) 2021 Intel Corporation
 //
 // SPDX-License-Identifier: MIT
 
@@ -22,24 +22,27 @@ export default function DetailsComponent(props: DetailsComponentProps): JSX.Elem
 
     const history = useHistory();
 
+    const backButton = {
+        name: 'tasks',
+        url: '/tasks',
+    };
+
+    if (history.location.state?.from) {
+        // little "magic" to use proper plural form ;)
+        [backButton.name] = history.location.state.from.split('s/');
+        backButton.url = `/${history.location.state.from}`;
+    } else if (taskInstance.projectId) {
+        backButton.name = 'project';
+        backButton.url = `/projects/${taskInstance.projectId}`;
+    }
+
     return (
         <Row className='cvat-task-top-bar' justify='space-between' align='middle'>
             <Col>
-                {taskInstance.projectId ? (
-                    <Button
-                        onClick={() => history.push(`/projects/${taskInstance.projectId}`)}
-                        type='link'
-                        size='large'
-                    >
-                        <LeftOutlined />
-                        Back to project
-                    </Button>
-                ) : (
-                    <Button onClick={() => history.push('/tasks')} type='link' size='large'>
-                        <LeftOutlined />
-                        Back to tasks
-                    </Button>
-                )}
+                <Button onClick={() => history.push(backButton.url)} type='link' size='large'>
+                    <LeftOutlined />
+                    {`Back to ${backButton.name}`}
+                </Button>
             </Col>
             <Col>
                 <Dropdown overlay={<ActionsMenuContainer taskInstance={taskInstance} />}>

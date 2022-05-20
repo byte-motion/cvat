@@ -1,0 +1,176 @@
+@import '../../base.scss';
+
+.cvat-workouts-page {
+    padding-top: $grid-unit-size * 2;
+    padding-bottom: $grid-unit-size;
+    height: 100%;
+    width: 100%;
+
+    > div:nth-child(1) {
+        padding-bottom: $grid-unit-size;
+
+        div > {
+            span {
+                color: $text-color;
+            }
+        }
+    }
+}
+
+/* empty-workouts icon */
+.cvat-empty-workouts-list {
+    > div:nth-child(1) {
+        margin-top: $grid-unit-size * 6;
+    }
+
+    > div:nth-child(2) {
+        > div {
+            margin-top: $grid-unit-size * 3;
+
+            /* No workouts created yet */
+            > span {
+                font-size: 20px;
+                color: $text-color;
+            }
+        }
+    }
+
+    /* To get started with your annotation workout .. */
+    > div:nth-child(3) {
+        margin-top: $grid-unit-size;
+    }
+}
+
+.cvat-workouts-top-bar {
+    > div:first-child {
+        .cvat-title {
+            margin-right: $grid-unit-size;
+        }
+
+        display: flex;
+    }
+
+    > div:nth-child(2) {
+        display: flex;
+        justify-content: flex-end;
+    }
+}
+
+.cvat-create-workout-button {
+    padding: 0 $grid-unit-size * 4;
+}
+
+.cvat-workouts-pagination {
+    display: flex;
+    justify-content: center;
+}
+
+.ant-menu.cvat-workout-actions-menu {
+    box-shadow: 0 0 17px rgba(0, 0, 0, 0.2);
+
+    > li:hover {
+        background-color: $hover-menu-color;
+    }
+
+    .ant-menu-submenu-title {
+        margin: 0;
+        width: 13em;
+    }
+}
+
+.cvat-workouts-workout-item-card {
+    .cvat-workouts-workout-item-card-preview {
+        .ant-empty {
+            margin: $grid-unit-size;
+            height: inherit;
+            display: grid;
+
+            > div:first-child {
+                margin: auto;
+            }
+        }
+
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        object-fit: cover;
+        cursor: pointer;
+    }
+
+    .cvat-workouts-workout-item-title {
+        cursor: pointer;
+    }
+
+    .cvat-porjects-workout-item-description {
+        display: flex;
+        justify-content: space-between;
+
+        // actions button
+        > div:nth-child(2) {
+            display: flex;
+            align-self: flex-end;
+            justify-content: center;
+
+            > button {
+                color: $text-color;
+                width: inherit;
+            }
+        }
+    }
+
+    .ant-card-cover {
+        flex: 1;
+        height: 0;
+    }
+
+    width: 25%;
+    border-width: 4px;
+    display: flex;
+    flex-direction: column;
+}
+
+.cvat-workout-list-content {
+    padding-bottom: $grid-unit-size;
+}
+
+.cvat-workouts-list {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.cvat-workout-progress {
+    width: 100%;
+}
+
+.cvat-workout-progress-progress {
+    color: $inprogress-progress-color;
+    fill: $inprogress-progress-color;
+    margin-right: 5px;
+    text-transform: capitalize;
+}
+
+.cvat-workout-completed-progress div.ant-progress-bg {
+    background: $completed-progress-color !important;
+}
+
+.cvat-workout-pending-progress {
+    color: $pending-progress-color;
+    fill: $pending-progress-color;
+    margin-right: 5px;
+    text-transform: capitalize;
+}
+
+.cvat-workout-error-progress {
+    color: $danger-icon-color;
+    fill: $danger-icon-color;
+    margin-right: 5px;
+    text-transform: capitalize;
+}
+
+.cvat-workout-completed-progress {
+    color: $completed-progress-color;
+    fill: $completed-progress-color;
+    margin-right: 5px;
+    text-transform: capitalize;
+}

@@ -249,6 +249,25 @@
                 Axios.defaults.headers.common.Authorization = `Token ${token}`;
             }
 
+            async function signing(url) {
+                const { backendAPI, proxy } = config;
+
+                try {
+                    const data = JSON.stringify({
+                        url: `${backendAPI}${url}`,
+                    });
+                    const response = await Axios.post(`${backendAPI}/auth/signing`, data, {
+                        proxy,
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
+                    return response.data;
+                } catch (errorData) {
+                    throw generateError(errorData);
+                }
+            }
+
             async function logout() {
                 try {
                     await Axios.post(`${config.backendAPI}/auth/logout`, {
@@ -1230,8 +1249,7 @@
 
                 let response = null;
                 try {
-                    const url = `${backendAPI}/cloudstorages/${id}/content${
-                        manifestPath ? `?manifest_path=${manifestPath}` : ''
+                    const url = `${backendAPI}/cloudstorages/${id}/content${manifestPath ? `?manifest_path=${manifestPath}` : ''
                     }`;
                     response = await Axios.get(url, {
                         proxy: config.proxy,
@@ -1302,6 +1320,7 @@
                             formats,
                             exception,
                             login,
+                            signing,
                             logout,
                             changePassword,
                             requestPasswordReset,

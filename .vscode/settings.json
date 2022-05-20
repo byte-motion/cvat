@@ -32,5 +32,10 @@
             "name": "cvat",
             "database": "${workspaceFolder:cvat}/db.sqlite3"
         }
+    ],
+    "cSpell.words": [
+        "aifred",
+        "antd",
+        "cvat"
     ]
 }

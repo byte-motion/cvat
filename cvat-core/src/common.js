@@ -76,7 +76,7 @@
                 if (value !== undefined) {
                     throw new ArgumentError(
                         `"${name}" is expected to be ${instance.name}, but ` +
-                            `"${value.constructor.name}" has been got`,
+                        `"${value.constructor.name}" has been got`,
                     );
                 }
 

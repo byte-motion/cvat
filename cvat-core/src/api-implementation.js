@@ -5,6 +5,7 @@
 (() => {
     const PluginRegistry = require('./plugins');
     const serverProxy = require('./server-proxy');
+    const aifredProxy = require('./aifred-proxy');
     const lambdaManager = require('./lambda-manager');
     const {
         isBoolean,
@@ -22,6 +23,7 @@
         DimensionType,
         CloudStorageProviderType,
         CloudStorageCredentialsType,
+        WorkoutStatus,
     } = require('./enums');
 
     const User = require('./user');
@@ -86,6 +88,11 @@
 
         cvat.server.login.implementation = async (username, password) => {
             await serverProxy.server.login(username, password);
+        };
+
+        cvat.server.signing.implementation = async (url) => {
+            const result = await serverProxy.server.signing(url);
+            return result;
         };
 
         cvat.server.logout.implementation = async () => {
@@ -311,6 +318,113 @@
             cloudStorages.count = cloudStoragesData.count;
 
             return cloudStorages;
+        };
+
+        cvat.aifred.login.implementation = (url) => aifredProxy.login(url);
+
+        cvat.aifred.workspaces.implementation = () => aifredProxy.workspaces();
+
+        cvat.aifred.dtls.implementation = (workspaceId) => aifredProxy.dtls(workspaceId);
+
+        cvat.aifred.createWorkout.implementation =
+            (name, instance, workspaceId, dtlId, iterations) => (
+                aifredProxy.createWorkout(name, instance, workspaceId, dtlId, iterations)
+            );
+
+        cvat.aifred.getSelf.implementation = () => aifredProxy.getSelf();
+
+        cvat.aifred.authorized.implementation = () => aifredProxy.authorized();
+
+        const getWorkoutPreview = async (workout) => {
+            const url = new URL(workout.data_url);
+            const [type, id] = url.pathname.split('/').slice(-2);
+
+            const result = {
+                dataset: null,
+                preview: null,
+            };
+
+            switch (type) {
+                case 'tasks': {
+                    const tasks = await cvat.tasks.get.implementation({ id: Number(id) });
+                    const task = tasks.pop();
+                    result.dataset = task;
+                    result.preview = await task.frames.preview();
+                    break;
+                }
+                case 'projects': {
+                    const projects = await cvat.projects.get.implementation({ id: Number(id) });
+                    const project = projects.pop();
+                    result.dataset = project;
+                    result.preview = await project.preview();
+                    break;
+                }
+                default:
+                    break;
+            }
+
+            return result;
+        };
+
+        cvat.aifred.getWorkouts.implementation = async (filter) => {
+            checkFilter(filter, {
+                id: isInteger,
+                page: isInteger,
+                task: isInteger,
+                project: isInteger,
+                search: isString,
+                status: isEnum.bind(WorkoutStatus),
+            });
+
+            checkExclusiveFields(filter, ['id', 'search'], ['page']);
+
+            const searchParams = new URLSearchParams();
+            for (const field of ['search', 'status', 'id', 'page', 'task', 'project']) {
+                if (Object.prototype.hasOwnProperty.call(filter, field)) {
+                    searchParams.set(camelToSnake(field), filter[field]);
+                }
+            }
+
+            const workoutsData = await aifredProxy.getWorkouts(searchParams.toString());
+            const workouts = workoutsData.map(async (workout) => {
+                const { dataset, preview } = await getWorkoutPreview(workout);
+
+                workout.dataset = dataset;
+                workout.preview = preview;
+                workout.owner = workout.cvat_user;
+
+                return workout;
+            });
+
+            const result = await Promise.all(workouts);
+            return result;
+        };
+
+        cvat.aifred.getWorkout.implementation = async (workoutId) => {
+            const workout = await aifredProxy.getWorkout(workoutId);
+            const preview = await getWorkoutPreview(workout);
+            return {
+                ...workout,
+                ...preview,
+                owner: workout.cvat_user,
+            };
+        };
+
+        cvat.aifred.getWorkoutImage.implementation =
+            (workoutId, fileType, fileName) => aifredProxy.getWorkoutImage(workoutId, fileType, fileName);
+
+        cvat.aifred.getWorkoutMetrics.implementation = (workoutId) => aifredProxy.getWorkoutMetrics(workoutId);
+
+        cvat.aifred.getOcellusModel.implementation = (workoutId, fileName) => {
+            aifredProxy.getOcellusModel(workoutId, fileName);
+        };
+
+        cvat.aifred.stopTraining.implementation = (workoutId) => aifredProxy.stopTraining(workoutId);
+
+        cvat.aifred.deleteWorkout.implementation = (workoutId) => aifredProxy.deleteWorkout(workoutId);
+
+        cvat.aifred.updateWorkout.implementation = (workoutId, name, instance, dtlId, iterations) => {
+            aifredProxy.updateWorkout(workoutId, name, instance, dtlId, iterations);
         };
 
         return cvat;

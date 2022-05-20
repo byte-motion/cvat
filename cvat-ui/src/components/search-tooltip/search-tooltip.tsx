@@ -11,7 +11,7 @@ import './styles.scss';
 import CVATTooltip from 'components/common/cvat-tooltip';
 
 interface Props {
-    instance: 'task' | 'project' | 'cloudstorage';
+    instance: 'task' | 'project' | 'cloudstorage' | 'workout';
     children: JSX.Element;
 }
 
@@ -82,17 +82,19 @@ export default function SearchTooltip(props: Props): JSX.Element {
                             </Text>
                         </Paragraph>
                     ) : null}
-                    <Paragraph>
-                        <Text strong>owner: admin</Text>
-                        <Text>
-                            all
-                            {instances}
-                            created by users who have the substring
-                            <q>admin</q>
-                            in their username
-                        </Text>
-                    </Paragraph>
-                    {instance !== 'cloudstorage' ? (
+                    {instance !== 'workout' ? (
+                        <Paragraph>
+                            <Text strong>owner: admin</Text>
+                            <Text>
+                                all
+                                {instances}
+                                created by users who have the substring
+                                <q>admin</q>
+                                in their username
+                            </Text>
+                        </Paragraph>
+                    ) : null}
+                    {!['cloudstorage', 'workout'].includes(instance) ? (
                         <Paragraph>
                             <Text strong>assignee: employee</Text>
                             <Text>
@@ -104,7 +106,7 @@ export default function SearchTooltip(props: Props): JSX.Element {
                             </Text>
                         </Paragraph>
                     ) : null}
-                    {instance !== 'cloudstorage' ? (
+                    {!['cloudstorage', 'workout'].includes(instance) ? (
                         <Paragraph>
                             <Text strong>name: training</Text>
                             <Text>
@@ -124,10 +126,28 @@ export default function SearchTooltip(props: Props): JSX.Element {
                             </Text>
                         </Paragraph>
                     ) : null}
-                    {instance !== 'cloudstorage' ? (
+                    {!['cloudstorage', 'workout'].includes(instance) ? (
                         <Paragraph>
                             <Text strong>status: annotation</Text>
                             <Text>annotation, validation, or completed</Text>
+                        </Paragraph>
+                    ) : null}
+                    {instance === 'workout' ? (
+                        <Paragraph>
+                            <Text strong>status: new</Text>
+                            <Text>new, training, stopped, error or finished</Text>
+                        </Paragraph>
+                    ) : null}
+                    {instance === 'workout' ? (
+                        <Paragraph>
+                            <Text strong>task: 4</Text>
+                            <Text>Workout with data set from task with id 4</Text>
+                        </Paragraph>
+                    ) : null}
+                    {instance === 'workout' ? (
+                        <Paragraph>
+                            <Text strong>project: 6</Text>
+                            <Text>Workout with data set from project with id 6</Text>
                         </Paragraph>
                     ) : null}
                     <Paragraph>

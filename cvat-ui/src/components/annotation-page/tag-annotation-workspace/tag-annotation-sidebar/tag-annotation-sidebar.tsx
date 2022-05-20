@@ -149,7 +149,7 @@ function TagAnnotationSidebar(props: StateToProps & DispatchToProps): JSX.Elemen
 
     const siderProps: SiderProps = {
         className: 'cvat-tag-annotation-sidebar',
-        theme: 'light',
+        theme: 'dark',
         width: 300,
         collapsedWidth: 0,
         reverseArrow: true,

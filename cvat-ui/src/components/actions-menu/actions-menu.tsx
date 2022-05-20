@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import './styles.scss';
-import React from 'react';
+import React, { useCallback } from 'react';
 import Menu from 'antd/lib/menu';
 import Modal from 'antd/lib/modal';
 import { LoadingOutlined } from '@ant-design/icons';
@@ -35,6 +35,7 @@ export enum Actions {
     MOVE_TASK_TO_PROJECT = 'move_task_to_project',
     OPEN_BUG_TRACKER = 'open_bug_tracker',
     EXPORT_TASK = 'export_task',
+    CREATE_WORKOUT = 'create_workout',
 }
 
 function ActionsMenuComponent(props: Props): JSX.Element {
@@ -50,29 +51,32 @@ function ActionsMenuComponent(props: Props): JSX.Element {
         exportIsActive,
     } = props;
 
-    function onClickMenuWrapper(params: MenuInfo): void {
-        if (!params) {
-            return;
-        }
+    const onClickMenuWrapper = useCallback(
+        (params: MenuInfo) => {
+            if (!params) {
+                return;
+            }
 
-        if (params.key === Actions.DELETE_TASK) {
-            Modal.confirm({
-                title: `The task ${taskID} will be deleted`,
-                content: 'All related data (images, annotations) will be lost. Continue?',
-                className: 'cvat-modal-confirm-delete-task',
-                onOk: () => {
-                    onClickMenu(params);
-                },
-                okButtonProps: {
-                    type: 'primary',
-                    danger: true,
-                },
-                okText: 'Delete',
-            });
-        } else {
-            onClickMenu(params);
-        }
-    }
+            if (params.key === Actions.DELETE_TASK) {
+                Modal.confirm({
+                    title: `The task ${taskID} will be deleted`,
+                    content: 'All related data (images, annotations) will be lost. Continue?',
+                    className: 'cvat-modal-confirm-delete-task',
+                    onOk: () => {
+                        onClickMenu(params);
+                    },
+                    okButtonProps: {
+                        type: 'primary',
+                        danger: true,
+                    },
+                    okText: 'Delete',
+                });
+            } else {
+                onClickMenu(params);
+            }
+        },
+        [taskID],
+    );
 
     return (
         <Menu selectable={false} className='cvat-actions-menu' onClick={onClickMenuWrapper}>
@@ -111,6 +115,8 @@ function ActionsMenuComponent(props: Props): JSX.Element {
             <Menu.Divider />
             <Menu.Item key={Actions.MOVE_TASK_TO_PROJECT}>Move to project</Menu.Item>
             <Menu.Item key={Actions.DELETE_TASK}>Delete</Menu.Item>
+            <Menu.Divider />
+            <Menu.Item key={Actions.CREATE_WORKOUT}>Create workout</Menu.Item>
         </Menu>
     );
 }

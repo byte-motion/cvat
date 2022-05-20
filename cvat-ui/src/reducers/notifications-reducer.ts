@@ -18,6 +18,8 @@ import { UserAgreementsActionTypes } from 'actions/useragreements-actions';
 import { ReviewActionTypes } from 'actions/review-actions';
 import { ExportActionTypes } from 'actions/export-actions';
 import { CloudStorageActionTypes } from 'actions/cloud-storage-actions';
+import { WorkoutsActionTypes } from 'actions/workouts-actions';
+import { WorkoutActionTypes } from 'actions/workout-actions';
 
 import getCore from 'cvat-core-wrapper';
 import { NotificationsState } from './interfaces';
@@ -120,6 +122,17 @@ const defaultState: NotificationsState = {
             updating: null,
             deleting: null,
         },
+        workouts: {
+            creating: null,
+            fetching: null,
+            updating: null,
+            deleting: null,
+        },
+        workout: {
+            stopping: null,
+            deleting: null,
+            updating: null,
+        },
     },
     messages: {
         tasks: {
@@ -135,6 +148,13 @@ const defaultState: NotificationsState = {
             registerDone: '',
             requestPasswordResetDone: '',
             resetPasswordDone: '',
+        },
+        workouts: {
+            creatingDone: '',
+        },
+        workout: {
+            deletingDone: '',
+            stoppingDone: '',
         },
     },
 };
@@ -1303,6 +1323,134 @@ export default function (state = defaultState, action: AnyAction): Notifications
                 },
             };
         }
+
+        case WorkoutsActionTypes.CREATE_WORKOUT_FAILED: {
+            const instanceID = action.payload.instance.id;
+            const instanceType = action.payload.instance instanceof core.classes.Project ? 'project' : 'task';
+            const { name } = action.payload;
+
+            return {
+                ...state,
+                errors: {
+                    ...state.errors,
+                    workouts: {
+                        ...state.errors.workouts,
+                        creating: {
+                            message:
+                                `Could not create workout '${name}' for the ` +
+                                `<a href="/${instanceType}s/${instanceID}" target="_blank">` +
+                                `${instanceType} ${instanceID}</a>`,
+                            reason: action.payload.error.toString(),
+                        },
+                    },
+                },
+            };
+        }
+
+        case WorkoutsActionTypes.CREATE_WORKOUT_SUCCESS: {
+            const workoutID = action.payload.workout.id;
+            const { name } = action.payload;
+
+            return {
+                ...state,
+                messages: {
+                    ...state.messages,
+                    workouts: {
+                        ...state.messages.workouts,
+                        creatingDone: `Workout '${name}' has been created successfully ` +
+                            `<a href="/workouts/${workoutID}">Open workout</a>`,
+                    },
+                },
+            };
+        }
+
+        case WorkoutActionTypes.STOP_WORKOUT_TRAINING_FAILED: {
+            const { workout, error } = action.payload;
+
+            return {
+                ...state,
+                errors: {
+                    ...state.errors,
+                    workout: {
+                        ...state.errors.workout,
+                        stopping: {
+                            message:
+                                `Could not stop training of workout '${workout.name}' #${workout.id}`,
+                            reason: error.toString(),
+                        },
+                    },
+                },
+            };
+        }
+
+        case WorkoutActionTypes.STOP_WORKOUT_TRAINING_SUCCESS: {
+            const { workout } = action.payload;
+
+            return {
+                ...state,
+                messages: {
+                    ...state.messages,
+                    workout: {
+                        ...state.messages.workout,
+                        stoppingDone: `Workout '${workout.name}' #${workout.id} stopped successfully`,
+                    },
+                },
+            };
+        }
+
+        case WorkoutActionTypes.DELETE_WORKOUT_FAILED: {
+            const { workout, error } = action.payload;
+
+            return {
+                ...state,
+                errors: {
+                    ...state.errors,
+                    workout: {
+                        ...state.errors.workout,
+                        deleting: {
+                            message:
+                                `Could not delete workout '${workout.name}' #${workout.id}`,
+                            reason: error.toString(),
+                        },
+                    },
+                },
+            };
+        }
+
+        case WorkoutActionTypes.DELETE_WORKOUT_SUCCESS: {
+            const { workout } = action.payload;
+
+            return {
+                ...state,
+                messages: {
+                    ...state.messages,
+                    workout: {
+                        ...state.messages.workout,
+                        deletingDone: `Workout '${workout.name}' #${workout.id} deleted successfully`,
+                    },
+                },
+            };
+        }
+
+        case WorkoutActionTypes.UPDATE_WORKOUT_FAILED: {
+            const { workout, error } = action.payload;
+
+            return {
+                ...state,
+                errors: {
+                    ...state.errors,
+                    workout: {
+                        ...state.errors.workout,
+                        updating: {
+                            message:
+                                `Could not update workout #${workout.id}`,
+                            reason: error.toString(),
+                        },
+                    },
+                },
+            };
+        }
+
         case BoundariesActionTypes.RESET_AFTER_ERROR:
         case AuthActionTypes.LOGOUT_SUCCESS: {
             return { ...defaultState };

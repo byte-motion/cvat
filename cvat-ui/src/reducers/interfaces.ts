@@ -115,8 +115,88 @@ export interface ExportState {
     modalVisible: boolean;
 }
 
+export interface Workout {
+    instance: any;
+    dataset: any;
+    preview: string;
+}
+
+export interface WorkoutValidation {
+    name: string;
+    image: string;
+}
+
+export interface WorkoutState {
+    fetching: boolean;
+    current: Workout | null;
+    instance: any;
+    modalVisible: boolean;
+    activities: {
+        creates: {
+            id: number | null;
+            error: string;
+        };
+        validations: {
+            images: WorkoutValidation[];
+            fetching: boolean;
+        };
+        metrics: {
+            image: string | null;
+            fetching: boolean;
+        };
+        deletes: {
+            error: string;
+        };
+        stops: {
+            error: string;
+        };
+    };
+}
+
+export interface OcellusExportState {
+    workout: any;
+    modalVisible: boolean;
+}
+export interface WorkoutsState {
+    gettingQuery: WorkoutsQuery;
+    count: number;
+    current: Workout[];
+    fetching: boolean;
+    initialized: boolean;
+    activities: {
+        creates: {
+            id: number | null,
+            error: string
+        };
+    };
+    instance: any;
+    modalVisible: boolean;
+}
+
+export interface WorkoutsQuery {
+    page: number;
+    id: number | null;
+    search: string | null;
+    status: string | null;
+    task: number | null;
+    project: number | null;
+    [key: string]: string | number | null;
+}
+
 export interface FormatsState {
     annotationFormats: any;
+    fetching: boolean;
+    initialized: boolean;
+}
+
+export interface AIfredWorkspacesState {
+    workspaces: any;
+    fetching: boolean;
+    initialized: boolean;
+}
+
+export interface AIfredDTLsState {
+    dtls: any;
     fetching: boolean;
     initialized: boolean;
 }
@@ -399,6 +479,17 @@ export interface NotificationsState {
             updating: null | ErrorState;
             deleting: null | ErrorState;
         };
+        workouts: {
+            creating: null | ErrorState;
+            fetching: null | ErrorState;
+            updating: null | ErrorState;
+            deleting: null | ErrorState;
+        };
+        workout: {
+            stopping: null | ErrorState;
+            deleting: null | ErrorState;
+            updating: null | ErrorState;
+        };
     };
     messages: {
         tasks: {
@@ -414,6 +505,13 @@ export interface NotificationsState {
             registerDone: string;
             requestPasswordResetDone: string;
             resetPasswordDone: string;
+        };
+        workouts: {
+            creatingDone: string;
+        };
+        workout: {
+            deletingDone: string;
+            stoppingDone: string;
         };
     };
 }
@@ -681,6 +779,17 @@ export interface ReviewState {
     };
 }
 
+export enum WorkoutStatus {
+    FINISHED = 'finished',
+    STOPPED = 'stopped',
+    NEW = 'new',
+    ERROR = 'error',
+    QUEUED = 'queued',
+    TRAINING = 'training',
+    FETCHING = 'fetching',
+    AUGMENTING = 'augmenting',
+}
+
 export interface CombinedState {
     auth: AuthState;
     projects: ProjectsState;
@@ -698,6 +807,11 @@ export interface CombinedState {
     review: ReviewState;
     export: ExportState;
     cloudStorages: CloudStoragesState;
+    workouts: WorkoutsState;
+    workout: WorkoutState;
+    aifredWorkspaces: AIfredWorkspacesState;
+    aifredDTLs: AIfredDTLsState;
+    exportOcellus: OcellusExportState;
 }
 
 export enum DimensionType {

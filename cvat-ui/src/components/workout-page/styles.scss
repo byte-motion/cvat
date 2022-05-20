@@ -1,0 +1,135 @@
+// Copyright (C) 2020 Intel Corporation
+//
+// SPDX-License-Identifier: MIT
+
+@import '../../base.scss';
+
+.cvat-workout-page {
+    overflow-y: auto;
+    height: 100%;
+}
+
+.cvat-workout-details {
+    width: 100%;
+    height: auto;
+    border: 1px solid $border-color-1;
+    border-radius: 3px;
+    padding: $grid-unit-size * 2;
+    margin: $grid-unit-size * 2 0;
+    background: $background-color-1;
+
+    .ant-row:nth-child(1) {
+        margin-bottom: $grid-unit-size * 2;
+    }
+
+    .ant-row:nth-child(2) .ant-col:nth-child(2) > span {
+        margin-right: $grid-unit-size;
+    }
+
+    .cvat-workout-details-actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
+
+    .cvat-issue-tracker {
+        margin-top: $grid-unit-size * 2;
+        margin-bottom: $grid-unit-size * 2;
+    }
+}
+
+.cvat-workout-page-tasks-bar {
+    margin: $grid-unit-size * 2 0;
+}
+
+.ant-menu.cvat-workout-actions-menu {
+    box-shadow: 0 0 17px rgba(0, 0, 0, 0.2);
+
+    > li:hover {
+        background-color: $hover-menu-color;
+    }
+
+    .ant-menu-submenu-title {
+        margin: 0;
+        width: 13em;
+    }
+}
+
+.cvat-workout-top-bar-actions > button {
+    display: flex;
+    align-items: center;
+}
+
+.cvat-workout-tasks-pagination {
+    display: flex;
+    justify-content: center;
+}
+
+.cvat-workout-tasks-title-search {
+    display: flex;
+
+    > * {
+        margin-right: $grid-unit-size * 2;
+    }
+}
+
+.cvat-workout-preview-wrapper {
+    overflow: hidden;
+    margin-bottom: 20px;
+    width: $grid-unit-size * 30;
+    text-align: center;
+    vertical-align: middle;
+    background-color: $background-color-2;
+}
+
+.cvat-workout-image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: $grid-unit-size * 2;
+}
+
+.cvat-workout-progress {
+    width: 100%;
+}
+
+.cvat-workout-progress-progress {
+    color: $inprogress-progress-color;
+    fill: $inprogress-progress-color;
+    margin-right: 5px;
+    text-transform: capitalize;
+}
+
+.cvat-workout-completed-progress div.ant-progress-bg {
+    background: $completed-progress-color !important;
+}
+
+.cvat-workout-pending-progress {
+    color: $pending-progress-color;
+    fill: $pending-progress-color;
+    margin-right: 5px;
+    text-transform: capitalize;
+}
+
+.cvat-workout-error-progress {
+    color: $danger-icon-color;
+    fill: $danger-icon-color;
+    margin-right: 5px;
+    text-transform: capitalize;
+}
+
+.cvat-workout-completed-progress {
+    color: $completed-progress-color;
+    fill: $completed-progress-color;
+    margin-right: 5px;
+    text-transform: capitalize;
+}
+
+.cvat-workout-classes {
+    margin-top: $grid-unit-size * 2;
+}
+
+.cvat-workout-validation-preview {
+    margin-left: 1%;
+    width: 97%;
+}

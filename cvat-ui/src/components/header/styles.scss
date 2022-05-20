@@ -27,6 +27,12 @@
     align-items: center;
 }
 
+.anticon.ocellus-logo-icon {
+    > svg {
+        transform: scale(0.7);
+    }
+}
+
 .anticon.cvat-logo-icon {
     > svg {
         transform: scale(0.7);

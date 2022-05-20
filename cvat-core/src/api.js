@@ -160,6 +160,19 @@ function build() {
                 return result;
             },
             /**
+             * Method allows to sign url on a server
+             * @method signing
+             * @async
+             * @memberof module:API.cvat.server
+             * @param {string} url relative to API URL to sign ie. `/users/self`
+             * @throws {module:API.cvat.exceptions.PluginError}
+             * @throws {module:API.cvat.exceptions.ServerError}
+             */
+            async signing(url) {
+                const result = await PluginRegistry.apiWrapper(cvat.server.signing, url);
+                return result;
+            },
+            /**
              * Method allows to logout from the server
              * @method logout
              * @async
@@ -697,6 +710,8 @@ function build() {
              * @property {string} proxy Axios proxy settings.
              * For more details please read <a href="https://github.com/axios/axios"> here </a>
              * @memberof module:API.cvat.config
+             * @property {string} aifredAPI host with AIfred API
+             * @memberof module:API.cvat.config
              * @memberof module:API.cvat.config
              */
             get backendAPI() {
@@ -710,6 +725,12 @@ function build() {
             },
             set proxy(value) {
                 config.proxy = value;
+            },
+            get aifredAPI() {
+                return config.aifredAPI;
+            },
+            set aifredAPI(value) {
+                config.aifredAPI = value;
             },
         },
         /**
@@ -785,6 +806,234 @@ function build() {
             },
         },
         /**
+         * Namespace is used for AIFred API
+         * @namespace aifred
+         * @memberof module:API.cvat
+         */
+        aifred: {
+            /**
+             * @typedef {Object} WorkoutFilter
+             * @property {module:API.cvat.enums.WorkoutStatus} status
+             * Check if status contains this value
+             * @property {integer} id Check if id equals this value
+             * @property {integer} page Get specific page
+             * (default REST API returns 10 workouts per request.
+             * In order to get more, it is need to specify next page)
+             * @property {string} search Combined search of contains among all fields
+             * @property {integer} task Get workout for given task ID.
+             * @property {integer} project Get workout for given project ID.
+             * @global
+             */
+
+            /**
+             * Method login to AIfred using temporary token and signed CVAT URL
+             * @method login
+             * @async
+             * @memberof module:API.cvat.aifred
+             * @param {string} url signed CVAT `users/self` URL
+             * @throws {module:API.cvat.exceptions.PluginError}
+             * @throws {module:API.cvat.exceptions.ServerError}
+             */
+            async login(url) {
+                await PluginRegistry.apiWrapper(cvat.aifred.login, url);
+            },
+            /**
+             * Method returns a list of workspaces for user
+             * @method workspaces
+             * @async
+             * @memberof module:API.cvat.aifred
+             * @returns {Object} response data
+             * @throws {module:API.cvat.exceptions.PluginError}
+             * @throws {module:API.cvat.exceptions.ServerError}
+             */
+            async workspaces() {
+                const result = await PluginRegistry.apiWrapper(cvat.aifred.workspaces);
+                return result;
+            },
+            /**
+             * Method returns a list of DTLs assigned to the workspace
+             * @method dtls
+             * @async
+             * @memberof module:API.cvat.aifred
+             * @param {number} workspaceId ID of workspace
+             * @returns {Object} response data
+             * @throws {module:API.cvat.exceptions.PluginError}
+             * @throws {module:API.cvat.exceptions.ServerError}
+             */
+            async dtls(workspaceId) {
+                const result = await PluginRegistry.apiWrapper(cvat.aifred.dtls, workspaceId);
+                return result;
+            },
+            /**
+             * Method creates workout and returns information about it
+             * @method createWorkout
+             * @async
+             * @memberof module:API.cvat.aifred
+             * @param {string} name ID of workspace
+             * @param {string} instance ID of workspace
+             * @param {number} workspaceId
+             * @param {number} dtlId
+             * @param {number} iterations
+             * @returns {Object} response data
+             * @throws {module:API.cvat.exceptions.PluginError}
+             * @throws {module:API.cvat.exceptions.ServerError}
+             */
+            async createWorkout(name, instance, workspaceId, dtlId, iterations) {
+                const result = await PluginRegistry.apiWrapper(cvat.aifred.createWorkout, name, instance, workspaceId,
+                    dtlId, iterations);
+                return result;
+            },
+            /**
+             * Method returns information about logged in AIfred user
+             * @method getSelf
+             * @async
+             * @memberof module:API.cvat.aifred
+             * @returns {Object} response data
+             * @throws {module:API.cvat.exceptions.PluginError}
+             * @throws {module:API.cvat.exceptions.ServerError}
+             */
+            async getSelf() {
+                const result = await PluginRegistry.apiWrapper(cvat.aifred.getSelf);
+                return result;
+            },
+            /**
+             * Method allows to know whether you are authorized on the AIfred server
+             * @method authorized
+             * @async
+             * @memberof module:API.cvat.aifred
+             * @returns {boolean}
+             * @throws {module:API.cvat.exceptions.PluginError}
+             * @throws {module:API.cvat.exceptions.ServerError}
+             */
+            async authorized() {
+                const result = await PluginRegistry.apiWrapper(cvat.aifred.authorized);
+                return result;
+            },
+            /**
+             * Method returns a list of workouts corresponding to a filter
+             * @method getWorkouts
+             * @async
+             * @memberof module:API.cvat.aifred
+             * @param {WorkoutFilter} [filter={}] workouts filter
+             * @returns {module:API.cvat.classes.CloudStorage[]}
+             * @throws {module:API.cvat.exceptions.PluginError}
+             * @throws {module:API.cvat.exceptions.ServerError}
+             */
+            async getWorkouts(filter = {}) {
+                const result = await PluginRegistry.apiWrapper(cvat.aifred.getWorkouts, filter);
+                return result;
+            },
+            /**
+             * Method returns workout by its ID
+             * @method getWorkout
+             * @async
+             * @memberof module:API.cvat.aifred
+             * @param {number} workoutId ID of workout
+             * @returns {Object} response data
+             * @throws {module:API.cvat.exceptions.PluginError}
+             * @throws {module:API.cvat.exceptions.ServerError}
+             */
+            async getWorkout(workoutId) {
+                return PluginRegistry.apiWrapper(cvat.aifred.getWorkout, workoutId);
+            },
+            /**
+             * Method returns workout by its ID
+             * @method getWorkoutImage
+             * @async
+             * @memberof module:API.cvat.aifred
+             * @param {number} workoutId ID of workout
+             * @param {string} fileType type like `validations`
+             * @param {string} fileName name of image file
+             * @returns {Object} response data
+             * @throws {module:API.cvat.exceptions.PluginError}
+             * @throws {module:API.cvat.exceptions.ServerError}
+             */
+            async getWorkoutImage(workoutId, fileType, fileName) {
+                return PluginRegistry.apiWrapper(
+                    cvat.aifred.getWorkoutImage, workoutId, fileType, fileName,
+                );
+            },
+            /**
+             * Method returns workout metrics by its ID
+             * @method getWorkoutMetrics
+             * @async
+             * @memberof module:API.cvat.aifred
+             * @param {number} workoutId ID of workout
+             * @returns {Object} response data
+             * @throws {module:API.cvat.exceptions.PluginError}
+             * @throws {module:API.cvat.exceptions.ServerError}
+             */
+            async getWorkoutMetrics(workoutId) {
+                return PluginRegistry.apiWrapper(
+                    cvat.aifred.getWorkoutMetrics, workoutId,
+                );
+            },
+            /**
+             * Method returns workout ocellus model URL
+             * @method getOcellusModel
+             * @async
+             * @memberof module:API.cvat.aifred
+             * @param {number} workoutId ID of workout
+             * @param {string} fileName Ocellus model name
+             * @returns {Object} response data
+             * @throws {module:API.cvat.exceptions.PluginError}
+             * @throws {module:API.cvat.exceptions.ServerError}
+             */
+            async getOcellusModel(workoutId, fileName) {
+                return PluginRegistry.apiWrapper(
+                    cvat.aifred.getOcellusModel, workoutId, fileName,
+                );
+            },
+            /**
+             * Method stops running training in workout session
+             * @method stopTraining
+             * @async
+             * @memberof module:API.cvat.aifred
+             * @param {number} workoutId ID of workout
+             * @returns {Object} response data
+             * @throws {module:API.cvat.exceptions.PluginError}
+             * @throws {module:API.cvat.exceptions.ServerError}
+             */
+            async stopTraining(workoutId) {
+                return PluginRegistry.apiWrapper(
+                    cvat.aifred.stopTraining, workoutId,
+                );
+            },
+            /**
+             * Method deletes workout and stop workout session if running
+             * @method deleteWorkout
+             * @async
+             * @memberof module:API.cvat.aifred
+             * @param {number} workoutId ID of workout
+             * @returns {Object} response data
+             * @throws {module:API.cvat.exceptions.PluginError}
+             * @throws {module:API.cvat.exceptions.ServerError}
+             */
+            async deleteWorkout(workoutId) {
+                return PluginRegistry.apiWrapper(
+                    cvat.aifred.deleteWorkout, workoutId,
+                );
+            },
+            /**
+             * Method updates workout and returns information about it
+             * @method updateWorkout
+             * @async
+             * @memberof module:API.cvat.aifred
+             * @param {number} workoutId Workout ID
+             * @param {string} name ID of workspace
+             * @param {string} instance ID of workspace
+             * @param {number} dtlId
+             * @param {number} iterations
+             * @returns {Object} response data
+             * @throws {module:API.cvat.exceptions.PluginError}
+             * @throws {module:API.cvat.exceptions.ServerError}
+             */
+            async updateWorkout(workoutId, name, instance, dtlId, iterations) {
+                return PluginRegistry.apiWrapper(cvat.aifred.updateWorkout, workoutId, name, instance,
+                    dtlId, iterations);
+            },
+        },
+        /**
          * Namespace is used for access to classes
          * @namespace classes
          * @memberof module:API.cvat
@@ -818,6 +1067,7 @@ function build() {
     cvat.client = Object.freeze(cvat.client);
     cvat.enums = Object.freeze(cvat.enums);
     cvat.cloudStorages = Object.freeze(cvat.cloudStorages);
+    cvat.aifred = Object.freeze(cvat.aifred);
 
     const implementAPI = require('./api-implementation');
 

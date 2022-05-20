@@ -5,7 +5,7 @@
 import './styles.scss';
 import React from 'react';
 import { connect } from 'react-redux';
-import { useHistory } from 'react-router';
+import { useHistory, useLocation } from 'react-router';
 import { Row, Col } from 'antd/lib/grid';
 import Icon, {
     SettingOutlined,
@@ -13,7 +13,6 @@ import Icon, {
     EditOutlined,
     LoadingOutlined,
     LogoutOutlined,
-    GithubOutlined,
     QuestionCircleOutlined,
     CaretDownOutlined,
     ControlOutlined,
@@ -28,7 +27,7 @@ import Text from 'antd/lib/typography/Text';
 import getCore from 'cvat-core-wrapper';
 import consts from 'consts';
 
-import { CVATLogo, AccountIcon } from 'icons';
+import { AccountIcon, OcellusLogo } from 'icons';
 import ChangePasswordDialog from 'components/change-password-modal/change-password-modal';
 import { switchSettingsDialog as switchSettingsDialogAction } from 'actions/settings-actions';
 import { logoutAsync, authActions } from 'actions/auth-actions';
@@ -148,10 +147,11 @@ function HeaderContainer(props: Props): JSX.Element {
     } = props;
 
     const {
-        CHANGELOG_URL, LICENSE_URL, GITTER_URL, FORUM_URL, GITHUB_URL,
+        CHANGELOG_URL, LICENSE_URL, GITTER_URL, FORUM_URL,
     } = consts;
 
     const history = useHistory();
+    const location = useLocation();
 
     function showAboutModal(): void {
         Modal.info({
@@ -232,7 +232,7 @@ function HeaderContainer(props: Props): JSX.Element {
                 <SettingOutlined />
                 Settings
             </Menu.Item>
-            <Menu.Item key='about' onClick={showAboutModal}>
+            <Menu.Item key='about' onClick={() => showAboutModal()}>
                 <InfoCircleOutlined />
                 About
             </Menu.Item>
@@ -255,12 +255,18 @@ function HeaderContainer(props: Props): JSX.Element {
         </Menu>
     );
 
+    const getButtonClassName = (value: string): string => {
+        // eslint-disable-next-line security/detect-non-literal-regexp
+        const regex = new RegExp(`${value}$`);
+        return location.pathname.match(regex) ? 'cvat-header-button cvat-active-header-button' : 'cvat-header-button';
+    };
+
     return (
         <Layout.Header className='cvat-header'>
             <div className='cvat-left-header'>
-                <Icon className='cvat-logo-icon' component={CVATLogo} />
+                <Icon className='ocellus-logo-icon' component={OcellusLogo} />
                 <Button
-                    className='cvat-header-button'
+                    className={getButtonClassName('projects')}
                     type='link'
                     value='projects'
                     href='/projects'
@@ -272,7 +278,7 @@ function HeaderContainer(props: Props): JSX.Element {
                     Projects
                 </Button>
                 <Button
-                    className='cvat-header-button'
+                    className={getButtonClassName('tasks')}
                     type='link'
                     value='tasks'
                     href='/tasks?page=1'
@@ -284,16 +290,16 @@ function HeaderContainer(props: Props): JSX.Element {
                     Tasks
                 </Button>
                 <Button
-                    className='cvat-header-button'
+                    className={getButtonClassName('workouts')}
                     type='link'
-                    value='cloudstorages'
-                    href='/cloudstorages?page=1'
+                    value='workouts'
+                    href='/workouts?page=1'
                     onClick={(event: React.MouseEvent): void => {
                         event.preventDefault();
-                        history.push('/cloudstorages?page=1');
+                        history.push('/workouts?page=1');
                     }}
                 >
-                    Cloud Storages
+                    Workouts
                 </Button>
                 {isModelsPluginActive && (
                     <Button
@@ -326,18 +332,6 @@ function HeaderContainer(props: Props): JSX.Element {
                 )}
             </div>
             <div className='cvat-right-header'>
-                <Button
-                    className='cvat-header-button'
-                    type='link'
-                    href={GITHUB_URL}
-                    onClick={(event: React.MouseEvent): void => {
-                        event.preventDefault();
-                        window.open(GITHUB_URL, '_blank');
-                    }}
-                >
-                    <GithubOutlined />
-                    <Text className='cvat-text-color'>GitHub</Text>
-                </Button>
                 <Button
                     className='cvat-header-button'
                     type='link'

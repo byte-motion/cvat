@@ -9,6 +9,7 @@ import Menu from 'antd/lib/menu';
 
 import { deleteProjectAsync } from 'actions/projects-actions';
 import { exportActions } from 'actions/export-actions';
+import { workoutActions } from 'actions/workouts-actions';
 
 interface Props {
     projectInstance: any;
@@ -38,12 +39,17 @@ export default function ProjectActionsMenuComponent(props: Props): JSX.Element {
     return (
         <Menu className='cvat-project-actions-menu'>
             <Menu.Item
+                key='export-project'
                 onClick={() => dispatch(exportActions.openExportModal(projectInstance))}
             >
                 Export project dataset
             </Menu.Item>
-            <hr />
-            <Menu.Item onClick={onDeleteProject}>Delete</Menu.Item>
+            <Menu.Divider />
+            <Menu.Item key='delete-project' onClick={onDeleteProject}>Delete</Menu.Item>
+            <Menu.Divider />
+            <Menu.Item key='create-workout' onClick={() => dispatch(workoutActions.openWorkoutModal(projectInstance))}>
+                Create workout
+            </Menu.Item>
         </Menu>
     );
 }

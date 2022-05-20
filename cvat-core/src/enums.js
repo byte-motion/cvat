@@ -363,6 +363,32 @@
         ANONYMOUS_ACCESS: 'ANONYMOUS_ACCESS',
     });
 
+    /**
+     * Workout statuses
+     * @enum {string}
+     * @name WorkoutStatus
+     * @memberof module:API.cvat.enums
+     * @property {string} NEW 'new'
+     * @property {string} STOPPED 'stopped'
+     * @property {string} FINISHED 'finished'
+     * @property {string} ERROR 'error'
+     * @property {string} QUEUED 'queued'
+     * @property {string} TRAINING 'training'
+     * @property {string} FETCHING 'fetching'
+     * @property {string} AUGMENTING 'augmenting'
+     * @readonly
+     */
+    const WorkoutStatus = Object.freeze({
+        FINISHED: 'finished',
+        STOPPED: 'stopped',
+        NEW: 'new',
+        ERROR: 'error',
+        QUEUED: 'queued',
+        TRAINING: 'training',
+        FETCHING: 'fetching',
+        AUGMENTING: 'augmenting',
+    });
+
     module.exports = {
         ShareFileType,
         TaskStatus,
@@ -380,5 +406,6 @@
         DimensionType,
         CloudStorageProviderType,
         CloudStorageCredentialsType,
+        WorkoutStatus,
     };
 })();

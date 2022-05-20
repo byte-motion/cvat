@@ -23,12 +23,14 @@ export default function ProjectTopBar(props: DetailsComponentProps): JSX.Element
 
     const history = useHistory();
 
+    const backTo = history.location.state?.from || 'projects';
+
     return (
         <Row className='cvat-task-top-bar' justify='space-between' align='middle'>
             <Col>
-                <Button onClick={() => history.push('/projects')} type='link' size='large'>
+                <Button onClick={() => history.push(`/${backTo}`)} type='link' size='large'>
                     <LeftOutlined />
-                    Back to projects
+                    {`Back to ${backTo.split('s/')[0]}`}
                 </Button>
             </Col>
             <Col className='cvat-project-top-bar-actions'>
