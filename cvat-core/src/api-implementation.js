@@ -415,17 +415,21 @@
 
         cvat.aifred.getWorkoutMetrics.implementation = (workoutId) => aifredProxy.getWorkoutMetrics(workoutId);
 
-        cvat.aifred.getOcellusModel.implementation = (workoutId, fileName) => {
-            aifredProxy.getOcellusModel(workoutId, fileName);
-        };
+        cvat.aifred.getOcellusModel.implementation =
+            (workoutId, fileName) => aifredProxy.getOcellusModel(workoutId, fileName);
 
         cvat.aifred.stopTraining.implementation = (workoutId) => aifredProxy.stopTraining(workoutId);
 
         cvat.aifred.deleteWorkout.implementation = (workoutId) => aifredProxy.deleteWorkout(workoutId);
 
-        cvat.aifred.updateWorkout.implementation = (workoutId, name, instance, dtlId, iterations) => {
-            aifredProxy.updateWorkout(workoutId, name, instance, dtlId, iterations);
-        };
+        cvat.aifred.updateWorkout.implementation =
+            (
+                workoutId,
+                name,
+                instance,
+                dtlId,
+                iterations,
+            ) => aifredProxy.updateWorkout(workoutId, name, instance, dtlId, iterations);
 
         return cvat;
     }
