@@ -171,30 +171,37 @@
                 return response.data;
             }
 
-            async function getFile(url) {
+            async function getFile(url, period = 2000) {
                 return new Promise((resolve, reject) => {
                     const { proxy } = config;
-                    Axios.get(
-                        url,
-                        {
-                            proxy,
-                            responseType: 'blob',
-                        },
-                    ).then((result) => {
-                        if (isNode) {
-                            // eslint-disable-next-line no-undef
-                            resolve(global.Buffer.from(result.data, 'binary').toString('base64'));
-                        } else if (isBrowser) {
-                            const reader = new FileReader();
-                            reader.onload = () => {
-                                resolve(reader.result);
-                            };
-                            reader.readAsDataURL(result.data);
-                        }
-                    })
-                        .catch((error) => {
-                            reject(error);
-                        });
+
+                    async function request() {
+                        Axios.get(
+                            url,
+                            {
+                                proxy,
+                                responseType: 'blob',
+                            },
+                        ).then((result) => {
+                            if ([202, 201].includes(result.status)) {
+                                setTimeout(request, period);
+                            } else if (isNode) {
+                                // eslint-disable-next-line no-undef
+                                resolve(global.Buffer.from(result.data, 'binary').toString('base64'));
+                            } else if (isBrowser) {
+                                const reader = new FileReader();
+                                reader.onload = () => {
+                                    resolve(reader.result);
+                                };
+                                reader.readAsDataURL(result.data);
+                            }
+                        })
+                            .catch((error) => {
+                                reject(generateError(error));
+                            });
+                    }
+
+                    setTimeout(request);
                 });
             }
 
@@ -204,35 +211,12 @@
                 return getFile(url);
             }
 
-            async function getURL(url, period) {
-                const { proxy } = config;
-
-                return new Promise((resolve, reject) => {
-                    async function request() {
-                        Axios.get(url, {
-                            proxy,
-                        })
-                            .then((response) => {
-                                if ([202, 201].includes(response.status)) {
-                                    setTimeout(request, period);
-                                } else {
-                                    resolve(getFile(url));
-                                }
-                            })
-                            .catch((errorData) => {
-                                reject(generateError(errorData));
-                            });
-                    }
-                    setTimeout(request);
-                });
-            }
-
             async function getWorkoutMetrics(workoutId) {
                 const { aifredAPI } = config;
                 const queryPeriod = 1000; // in ms
 
                 const url = `${aifredAPI}/workouts/${workoutId}/metrics`;
-                return getURL(url, queryPeriod);
+                return getFile(url, queryPeriod);
             }
 
             async function getOcellusModel(workoutId, fileName) {
@@ -240,7 +224,7 @@
                 const queryPeriod = 2000; // in ms
                 const url = `${aifredAPI}/workouts/${workoutId}/ocellus?filename=${fileName}`;
 
-                return getURL(url, queryPeriod);
+                return getFile(url, queryPeriod);
             }
 
             async function stopTraining(workoutId) {
