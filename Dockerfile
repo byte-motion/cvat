@@ -8,17 +8,17 @@ ARG DJANGO_CONFIGURATION="production"
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get --no-install-recommends install -yq \
-        apache2-dev \
-        build-essential \
-        curl \
-        libldap2-dev \
-        libsasl2-dev \
-        nasm \
-        git \
-        pkg-config \
-        python3-dev \
-        python3-pip \
-        python3-venv && \
+    apache2-dev \
+    build-essential \
+    curl \
+    libldap2-dev \
+    libsasl2-dev \
+    nasm \
+    git \
+    pkg-config \
+    python3-dev \
+    python3-pip \
+    python3-venv && \
     rm -rf /var/lib/apt/lists/*
 
 # Compile Openh264 and FFmpeg
@@ -67,29 +67,29 @@ ENV TERM=xterm \
     TZ=${TZ}
 
 ARG USER="django"
-ARG DJANGO_CONFIGURATION="production"
+ARG DJANGO_CONFIGURATION="bytemotion"
 ENV DJANGO_CONFIGURATION=${DJANGO_CONFIGURATION}
 
 # Install necessary apt packages
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get --no-install-recommends install -yq \
-        apache2 \
-        ca-certificates \
-        libapache2-mod-xsendfile \
-        libgomp1 \
-        libgl1 \
-        supervisor \
-        libldap-2.4-2 \
-        libsasl2-2 \
-        libpython3-dev \
-        tzdata \
-        python3-distutils \
-        p7zip-full \
-        git \
-        git-lfs \
-        poppler-utils \
-        ssh \
-        curl && \
+    apache2 \
+    ca-certificates \
+    libapache2-mod-xsendfile \
+    libgomp1 \
+    libgl1 \
+    supervisor \
+    libldap-2.4-2 \
+    libsasl2-2 \
+    libpython3-dev \
+    tzdata \
+    python3-distutils \
+    p7zip-full \
+    git \
+    git-lfs \
+    poppler-utils \
+    ssh \
+    curl && \
     ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime && \
     dpkg-reconfigure -f noninteractive tzdata && \
     rm -rf /var/lib/apt/lists/* && \
@@ -100,37 +100,37 @@ ENV USER=${USER}
 ENV HOME /home/${USER}
 RUN adduser --shell /bin/bash --disabled-password --gecos "" ${USER} && \
     if [ -z ${socks_proxy} ]; then \
-        echo export "GIT_SSH_COMMAND=\"ssh -o StrictHostKeyChecking=no -o ConnectTimeout=30\"" >> ${HOME}/.bashrc; \
+    echo export "GIT_SSH_COMMAND=\"ssh -o StrictHostKeyChecking=no -o ConnectTimeout=30\"" >> ${HOME}/.bashrc; \
     else \
-        echo export "GIT_SSH_COMMAND=\"ssh -o StrictHostKeyChecking=no -o ConnectTimeout=30 -o ProxyCommand='nc -X 5 -x ${socks_proxy} %h %p'\"" >> ${HOME}/.bashrc; \
+    echo export "GIT_SSH_COMMAND=\"ssh -o StrictHostKeyChecking=no -o ConnectTimeout=30 -o ProxyCommand='nc -X 5 -x ${socks_proxy} %h %p'\"" >> ${HOME}/.bashrc; \
     fi
 
 ARG CLAM_AV="no"
 RUN if [ "$CLAM_AV" = "yes" ]; then \
-        apt-get update && \
-        apt-get --no-install-recommends install -yq \
-            clamav \
-            libclamunrar9 && \
-        sed -i 's/ReceiveTimeout 30/ReceiveTimeout 300/g' /etc/clamav/freshclam.conf && \
-        freshclam && \
-        chown -R ${USER}:${USER} /var/lib/clamav && \
-        rm -rf /var/lib/apt/lists/*; \
+    apt-get update && \
+    apt-get --no-install-recommends install -yq \
+    clamav \
+    libclamunrar9 && \
+    sed -i 's/ReceiveTimeout 30/ReceiveTimeout 300/g' /etc/clamav/freshclam.conf && \
+    freshclam && \
+    chown -R ${USER}:${USER} /var/lib/clamav && \
+    rm -rf /var/lib/apt/lists/*; \
     fi
 
 ARG INSTALL_SOURCES='no'
 WORKDIR ${HOME}/sources
 RUN if [ "$INSTALL_SOURCES" = "yes" ]; then \
-        sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list && \
-        apt-get update && \
-        dpkg --get-selections | while read -r line; do        \
-            package=$(echo "$line" | awk '{print $1}');       \
-            mkdir "$package";                                 \
-            (                                                 \
-                cd "$package";                                \
-                apt-get -q --download-only source "$package"; \
-            )                                                 \
-            done &&                                           \
-        rm -rf /var/lib/apt/lists/*;                          \
+    sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list && \
+    apt-get update && \
+    dpkg --get-selections | while read -r line; do        \
+    package=$(echo "$line" | awk '{print $1}');       \
+    mkdir "$package";                                 \
+    (                                                 \
+    cd "$package";                                \
+    apt-get -q --download-only source "$package"; \
+    )                                                 \
+    done &&                                           \
+    rm -rf /var/lib/apt/lists/*;                          \
     fi
 COPY --from=build-image /tmp/openh264/openh264*.tar.gz /tmp/ffmpeg/ffmpeg*.tar.gz ${HOME}/sources/
 
